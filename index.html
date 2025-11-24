@@ -622,81 +622,86 @@
     }
 
     function playGame(embedUrl) {
-      document.getElementById("games-container").style.display = "none";
-      document.getElementById("game-embed").classList.add("active");
-      document.getElementById("game-frame").src = embedUrl;
-    }
+  document.getElementById("games-container").style.display = "none";
+  document.getElementById("game-embed").classList.add("active");
+  document.getElementById("game-frame").src = embedUrl;
+}
 
-    function backToGames() {
-      document.getElementById("game-embed").classList.remove("active");
-      document.getElementById("games-container").style.display = "grid";
-      document.getElementById("game-frame").src = "";
-    }
+function backToGames() {
+  document.getElementById("game-embed").classList.remove("active");
+  document.getElementById("games-container").style.display = "grid";
+  document.getElementById("game-frame").src = "";
+}
 
-    // GAMES DATA
-    let allGames = [];
-    let currentCategory = 'all';
+// GAMES DATA
+let allGames = [];
+let currentCategory = 'all';
 
-    // LOAD GAMES FROM GITHUB JSON
-    fetch("https://andreyzhorik.github.io/VIXEL/games.json")
-      .then(res => res.json())
-      .then(data => {
-        allGames = data;
-        createCategoryFilters();
-        displayGames('all');
-      })
-      .catch(err => console.log("Games JSON error:", err));
+// LOAD GAMES FROM GITHUB JSON
+fetch("https://andreyzhorik.github.io/VIXEL/games.json")
+  .then(res => res.json())
+  .then(data => {
+    allGames = data;
+    createCategoryFilters();
+    displayGames('all');
+  })
+  .catch(err => console.log("Games JSON error:", err));
 
-    function createCategoryFilters() {
-      const categories = ['All', 'Sports', 'Strategy', 'Racing', 'Action', 'Skill', 'Shooting', '2 Player', 'Io'];
-      const filtersContainer = document.getElementById("category-filters");
-      
-      categories.forEach(category => {
-        const btn = document.createElement("button");
-        btn.className = "category-btn" + (category === 'All' ? ' active' : '');
-        btn.textContent = category;
-        btn.onclick = () => filterByCategory(category.toLowerCase(), btn);
-        filtersContainer.appendChild(btn);
-      });
-    }
+function createCategoryFilters() {
+  const categories = ['All', 'Action', 'Racing', '2 Player', 'Skill', 'Shooting', 'Io', 'Strategy', 'Sports'];
+  const filtersContainer = document.getElementById("category-filters");
+  
+  categories.forEach(category => {
+    const btn = document.createElement("button");
+    btn.className = "category-btn" + (category === 'All' ? ' active' : '');
+    btn.textContent = category;
+    btn.onclick = () => filterByCategory(category.toLowerCase(), btn);
+    filtersContainer.appendChild(btn);
+  });
+}
 
-    function filterByCategory(category, btnElement) {
-      currentCategory = category;
-      
-      // Update active button
-      document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
-      btnElement.classList.add('active');
-      
-      displayGames(category);
-    }
+function filterByCategory(category, btnElement) {
+  currentCategory = category;
+  
+  // Update active button
+  document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+  btnElement.classList.add('active');
+  
+  displayGames(category);
+}
 
-    function displayGames(category) {
-      const container = document.getElementById("games-container");
-      container.innerHTML = '';
-      
-      const filteredGames = category === 'all' 
-        ? allGames 
-        : allGames.filter(game => 
-            game.categories && game.categories.some(cat => 
-              cat.toLowerCase() === category || 
-              (category === '2 player' && cat.toLowerCase() === '2player')
-            )
-          );
-      
-      filteredGames.forEach(game => {
-        const card = document.createElement("div");
-        card.className = "game-card";
-        card.onclick = () => playGame(game.url);
+function displayGames(category) {
+  const container = document.getElementById("games-container");
+  container.innerHTML = '';
+  
+  const filteredGames = category === 'all' 
+    ? allGames 
+    : allGames.filter(game => 
+        game.categories && game.categories.some(cat => 
+          cat.toLowerCase() === category || 
+          (category === '2 player' && cat.toLowerCase() === '2 player')
+        )
+      );
+  
+  filteredGames.forEach(game => {
+    const card = document.createElement("div");
+    card.className = "game-card";
+    card.onclick = () => playGame(game.url);
 
-        card.innerHTML = `
-          <img src="${game.imageUrl}" alt="${game.label}" />
-          <h3>${game.label}</h3>
-        `;
+    card.innerHTML = `
+      <img src="${game.imageUrl}" alt="${game.label}" />
+      <h3>${game.label}</h3>
+    `;
 
-        container.appendChild(card);
-      });
-    }
-  </script>
+    container.appendChild(card);
+  });
+
+  // if no games
+  if (!filteredGames.length) {
+    container.innerHTML = `<p style="color:rgba(255,255,255,0.6)">No games found for this category.</p>`;
+  }
+}
+</script>
 
 </body>
 </html>

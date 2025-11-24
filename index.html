@@ -45,6 +45,25 @@
       text-align: center;
       color: var(--accent);
       margin-bottom: 25px;
+      text-shadow: 0 0 10px var(--accent), 0 0 20px var(--accent2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo-icon {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      font-weight: bold;
+      box-shadow: 0 0 15px var(--accent);
+      border: 2px solid var(--accent);
     }
 
     .nav-item {
@@ -87,6 +106,7 @@
     .page {
       display: none;
       animation: fade 0.25s;
+      height: 100%;
     }
 
     .page.active {
@@ -145,6 +165,62 @@
       font-size: 18px;
       color: var(--accent);
     }
+
+    /* IFRAME CONTAINER */
+    .iframe-container {
+      width: 100%;
+      height: calc(100vh - 140px);
+      border: 2px solid var(--accent2);
+      border-radius: 12px;
+      overflow: hidden;
+      background: #000;
+      box-shadow: 0 0 20px #ff000033;
+    }
+
+    .iframe-container iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* GAME EMBED */
+    .game-embed {
+      width: 100%;
+      height: calc(100vh - 140px);
+      border: 2px solid var(--accent2);
+      border-radius: 12px;
+      overflow: hidden;
+      background: #000;
+      box-shadow: 0 0 20px #ff000033;
+      display: none;
+    }
+
+    .game-embed.active {
+      display: block;
+    }
+
+    .game-embed iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .back-button {
+      padding: 10px 20px;
+      background: var(--accent2);
+      border: 2px solid var(--accent);
+      border-radius: 8px;
+      color: white;
+      cursor: pointer;
+      margin-bottom: 15px;
+      display: inline-block;
+      transition: 0.2s;
+    }
+
+    .back-button:hover {
+      background: var(--accent);
+      box-shadow: 0 0 10px var(--accent);
+    }
   </style>
 </head>
 
@@ -152,7 +228,10 @@
 
   <!-- SIDEBAR -->
   <div class="sidebar">
-    <div class="logo">VIXEL</div>
+    <div class="logo">
+      <div class="logo-icon">V</div>
+      <span>VIXEL</span>
+    </div>
 
     <div class="nav-item active" onclick="loadPage('home', this)">Home</div>
     <div class="nav-item" onclick="loadPage('games', this)">Games</div>
@@ -177,6 +256,42 @@
     <div id="page-games" class="page">
       <h2 style="color: var(--accent); margin-bottom: 20px;">Games</h2>
       <div class="games-grid" id="games-container"></div>
+      <div id="game-embed" class="game-embed">
+        <button class="back-button" onclick="backToGames()">← Back to Games</button>
+        <iframe id="game-frame" src=""></iframe>
+      </div>
+    </div>
+
+    <!-- AI -->
+    <div id="page-ai" class="page">
+      <h2 style="color: var(--accent); margin-bottom: 20px;">AI Assistant</h2>
+      <div class="iframe-container">
+        <iframe src="https://andreyzhorik.github.io/vixel-ai/"></iframe>
+      </div>
+    </div>
+
+    <!-- CHAT -->
+    <div id="page-chat" class="page">
+      <h2 style="color: var(--accent); margin-bottom: 20px;">Chat</h2>
+      <div class="iframe-container">
+        <iframe src="https://andreyzhorik.github.io/vixel-chat/"></iframe>
+      </div>
+    </div>
+
+    <!-- PROXY -->
+    <div id="page-proxy" class="page">
+      <h2 style="color: var(--accent); margin-bottom: 20px;">Pøx-y</h2>
+      <div class="iframe-container">
+        <iframe src="https://andreyzhorik.github.io/GRIP/"></iframe>
+      </div>
+    </div>
+
+    <!-- SITE -->
+    <div id="page-site" class="page">
+      <h2 style="color: var(--accent); margin-bottom: 20px;">Vixel Site</h2>
+      <div class="iframe-container">
+        <iframe src="https://sites.google.com/view/vixelhub"></iframe>
+      </div>
     </div>
 
   </div>
@@ -191,13 +306,29 @@
       // hide all pages
       document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
 
-      // open local page OR external pages
+      // show selected page
       if (page === "home") document.getElementById("page-home").classList.add("active");
-      else if (page === "games") document.getElementById("page-games").classList.add("active");
-      else if (page === "ai") window.location.href = "https://andreyzhorik.github.io/vixel-ai/";
-      else if (page === "chat") window.location.href = "https://andreyzhorik.github.io/vixel-chat/";
-      else if (page === "proxy") window.location.href = "https://andreyzhorik.github.io/GRIP/";
-      else if (page === "site") window.location.href = "https://sites.google.com/view/vixelhub";
+      else if (page === "games") {
+        document.getElementById("page-games").classList.add("active");
+        document.getElementById("game-embed").classList.remove("active");
+        document.getElementById("games-container").style.display = "grid";
+      }
+      else if (page === "ai") document.getElementById("page-ai").classList.add("active");
+      else if (page === "chat") document.getElementById("page-chat").classList.add("active");
+      else if (page === "proxy") document.getElementById("page-proxy").classList.add("active");
+      else if (page === "site") document.getElementById("page-site").classList.add("active");
+    }
+
+    function playGame(embedUrl) {
+      document.getElementById("games-container").style.display = "none";
+      document.getElementById("game-embed").classList.add("active");
+      document.getElementById("game-frame").src = embedUrl;
+    }
+
+    function backToGames() {
+      document.getElementById("game-embed").classList.remove("active");
+      document.getElementById("games-container").style.display = "grid";
+      document.getElementById("game-frame").src = "";
     }
 
     // LOAD GAMES FROM GITHUB JSON
@@ -209,7 +340,7 @@
         data.forEach(game => {
           const card = document.createElement("div");
           card.className = "game-card";
-          card.onclick = () => window.location.href = game.embed;
+          card.onclick = () => playGame(game.embed);
 
           card.innerHTML = `
             <img src="${game.image}" />

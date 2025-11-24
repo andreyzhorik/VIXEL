@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Vixel Hub</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#000000;
+      --panel:#3D0000;
+      --panel-2:#950101;
+      --accent:#FF0000;
+      --glass: rgba(255,255,255,0.03);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;background:var(--bg);color:#fff;font-family:Inter,Arial,system-ui,Segoe UI,Roboto, sans-serif}
+
+    /* layout */
+    .app{display:flex;height:100vh;overflow:hidden}
+
+    /* sidebar (thinner, less blocky) */
+    #sidebar{width:200px;background:linear-gradient(180deg,var(--panel),#2b0000);padding:18px 12px;display:flex;flex-direction:column;gap:10px;border-right:2px solid var(--accent)}
+    .logo{font-family:'Audiowide',sans-serif;color:var(--accent);font-size:26px;text-align:center;padding:6px 0;text-shadow:0 0 12px rgba(255,0,0,0.12)}
+
+    .nav{display:flex;flex-direction:column;gap:6px}
+    .item{padding:10px 12px;border-radius:8px;cursor:pointer;font-size:15px;display:flex;align-items:center;gap:10px;transition:all .12s;border-left:3px solid transparent}
+    .item:hover{transform:translateX(6px);box-shadow:0 6px 18px rgba(0,0,0,0.6)}
+    .item.active{background:var(--panel-2);border-left-color:var(--accent);box-shadow:0 0 12px rgba(255,0,0,0.08)}
+
+    /* content area */
+    #content{flex:1;background:#0d0d0d;display:flex;flex-direction:column}
+    .toolbar{padding:12px 18px;border-bottom:1px solid rgba(255,255,255,0.03);display:flex;align-items:center;gap:12px}
+    .title{font-weight:700;letter-spacing:1px}
+
+    /* iframe container */
+    .frame-wrap{flex:1;display:flex}
+    iframe#frame{flex:1;border:none;background:#000}
+
+    /* games list */
+    .games-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;padding:14px}
+    .card{background:var(--glass);padding:10px;border-radius:10px;display:flex;flex-direction:column;gap:8px}
+    .card img{width:100%;height:120px;object-fit:cover;border-radius:6px}
+    .card .meta{display:flex;justify-content:space-between;align-items:center}
+    .btn{background:linear-gradient(90deg,var(--panel-2),var(--accent));padding:8px 10px;border-radius:8px;color:#fff;cursor:pointer;border:none}
+
+    /* small screens */
+    @media (max-width:800px){#sidebar{width:64px;padding:12px} .logo{display:none} .item{justify-content:center} .games-grid{grid-template-columns:repeat(2,1fr)}}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside id="sidebar">
+      <div class="logo">VIXEL</div>
+      <nav class="nav">
+        <div class="item active" data-url="home" onclick="loadPage('home', this)">🏠<span class="label">Home</span></div>
+        <div class="item" data-url="games" onclick="loadPage('games', this)">🎮<span class="label">Games</span></div>
+        <div class="item" data-url="ai" onclick="loadPage('https://andreyzhorik.github.io/vixel-ai/', this)">🤖<span class="label">AI</span></div>
+        <div class="item" data-url="chat" onclick="loadPage('https://andreyzhorik.github.io/vixel-chat/', this)">💬<span class="label">Chat</span></div>
+        <div class="item" data-url="poxy" onclick="loadPage('poxy', this)">🕶️<span class="label">Pøx-y</span></div>
+        <div class="item" data-url="site" onclick="openSite('https://sites.google.com/view/vixelhub')">🌐<span class="label">Site</span></div>
+      </nav>
+    </aside>
+
+    <main id="content">
+      <div class="toolbar">
+        <div class="title" id="pageTitle">Home</div>
+      </div>
+
+      <div class="frame-wrap" id="workspace">
+        <!-- default home content -->
+        <div id="homeView" style="padding:18px;">
+          <h2 style="margin:8px 0 6px;color:var(--accent)">Welcome to Vixel Hub</h2>
+          <p style="margin:0 0 12px;opacity:0.85">pick Games / AI / Chat / Pøx-y from the sidebar. games are loaded from the onlinegames JSON and playable inline.</p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn" onclick="loadPage('games', findSidebarItem('games'))">Play Games</button>
+            <button class="btn" onclick="loadPage('poxy', findSidebarItem('poxy'))">Open Pøx-y</button>
+            <button class="btn" onclick="loadPage('https://andreyzhorik.github.io/vixel-chat/', findSidebarItem('chat'))">Open Chat</button>
+          </div>
+        </div>
+
+        <!-- dynamic area (games list OR iframe) -->
+        <div id="appView" style="flex:1;display:flex;flex-direction:column;min-height:0;width:100%">
+          <div id="gamesView" style="display:none;flex-direction:column;min-height:0">
+            <div style="padding:12px 14px;border-bottom:1px solid rgba(255,255,255,0.02);background:linear-gradient(180deg,transparent,rgba(255,255,255,0.01))">
+              <strong>Games</strong> — loaded from JSON
+            </div>
+            <div id="gamesList" class="games-grid"></div>
+          </div>
+
+          <iframe id="frame" src="about:blank" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // helper to find sidebar item element by data-url
+    function findSidebarItem(name){return document.querySelector('.item[data-url="'+name+'"]')}
+
+    function setActive(el){document.querySelectorAll('#sidebar .item').forEach(i=>i.classList.remove('active')); if(el) el.classList.add('active')}
+
+    // main navigation handler
+    function loadPage(url, el){
+      // make the clicked item active
+      setActive(el || findSidebarItem(url));
+      // update title
+      const titleEl = document.getElementById('pageTitle');
+
+      // hide all specialized views
+      document.getElementById('homeView').style.display = 'none';
+      document.getElementById('gamesView').style.display = 'none';
+      const frame = document.getElementById('frame');
+
+      if(url === 'home'){
+        titleEl.textContent = 'Home';
+        document.getElementById('homeView').style.display = 'block';
+        frame.style.display = 'none';
+      } else if(url === 'games'){
+        titleEl.textContent = 'Games';
+        document.getElementById('gamesView').style.display = 'flex';
+        frame.style.display = 'none';
+        loadGames();
+      } else if(url === 'poxy'){
+        titleEl.textContent = 'Pøx-y';
+        document.getElementById('gamesView').style.display = 'none';
+        document.getElementById('homeView').style.display = 'none';
+        frame.style.display = 'block';
+        // GRIP project as requested
+        frame.src = 'https://andreyzhorik.github.io/GRIP/';
+      } else {
+        // external urls (ai, chat, site open in iframe)
+        titleEl.textContent = (url === 'https://andreyzhorik.github.io/vixel-ai/' ? 'AI' : (url === 'https://andreyzhorik.github.io/vixel-chat/' ? 'Chat' : url));
+        document.getElementById('gamesView').style.display = 'none';
+        document.getElementById('homeView').style.display = 'none';
+        frame.style.display = 'block';
+        frame.src = url;
+      }
+    }
+
+    function openSite(url){
+      // opens google site in new tab per user's wish
+      window.open(url, '_blank', 'noopener');
+      // set active visual on site button
+      setActive(findSidebarItem('site'));
+    }
+
+    // Games loader: extracts games from the provided JSON and shows cards
+    let gamesLoaded = false;
+    async function loadGames(){
+      if(gamesLoaded) return;
+      gamesLoaded = true;
+      const listEl = document.getElementById('gamesList');
+      listEl.innerHTML = '<div style="grid-column:1/-1;padding:8px;opacity:0.8">Loading games...</div>';
+      try{
+        const res = await fetch('https://www.onlinegames.io/media/plugins/genGames/embed.json');
+        if(!res.ok) throw new Error('network');
+        const data = await res.json();
+        // data might be an array or object with items
+        const items = Array.isArray(data) ? data : (data.games || data.items || []);
+        if(!items.length){ listEl.innerHTML = '<div style="grid-column:1/-1;padding:8px;opacity:0.8">No games found in the JSON.</div>'; return }
+
+        listEl.innerHTML = '';
+        items.forEach(g => {
+          const card = document.createElement('div'); card.className='card';
+          const img = document.createElement('img'); img.src = g.image || '';
+          const title = document.createElement('div'); title.textContent = g.title || 'Untitled'; title.style.fontWeight='700'; title.style.fontSize='14px';
+          const desc = document.createElement('div'); desc.textContent = (g.description||'').slice(0,120);
+          const meta = document.createElement('div'); meta.className='meta';
+          const play = document.createElement('button'); play.className='btn'; play.textContent='Play';
+          play.onclick = () => { document.getElementById('gamesView').style.display='none'; document.getElementById('frame').style.display='block'; document.getElementById('frame').src = g.embed || g.url; setActive(findSidebarItem('games')) };
+          meta.appendChild(play);
+          card.appendChild(img); card.appendChild(title); card.appendChild(desc); card.appendChild(meta);
+          listEl.appendChild(card);
+        })
+      }catch(err){
+        console.error(err);
+        document.getElementById('gamesList').innerHTML = '<div style="grid-column:1/-1;padding:8px;opacity:0.8">Failed to load games (CORS or network). You can still open game URLs manually.</div>';
+      }
+    }
+
+    // on first load show home
+    window.addEventListener('DOMContentLoaded',()=>{
+      // ensure initial view
+      loadPage('home', findSidebarItem('home'));
+    })
+  </script>
+</body>
+</html>

@@ -1,769 +1,379 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Vixel Hub</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Vixel Hub — Games</title>
+<link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg1:#070707;
+  --bg2:#3D0000;
+  --panel:#150000;
+  --accent:#FF0000;
+  --accent2:#950101;
+  --accent-light:#FF3333;
+  --glass: rgba(26,0,0,0.45);
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:linear-gradient(135deg,var(--bg1),var(--bg2));color:#fff;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;}
+.app{display:flex;height:100vh;gap:18px;}
 
-  <!-- Audiowide Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet">
+/* Sidebar */
+.sidebar{
+  width:260px;
+  padding:22px;
+  background:linear-gradient(180deg,rgba(0,0,0,0.95),rgba(61,0,0,0.9));
+  border-right:2px solid rgba(255,0,0,0.12);
+  display:flex;flex-direction:column;align-items:center;gap:18px;
+}
+.logo-wrap{
+  width:100%;
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+  background:#120000; /* dark red bg for logo contrast */
+  padding:10px;border-radius:14px;border:1px solid rgba(255,0,0,0.12);
+}
+.logo-icon{width:120px;height:120px;border-radius:14px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:linear-gradient(135deg,var(--accent2),#330000);padding:6px}
+.logo-icon img{width:100%;height:100%;object-fit:contain}
+.brand{font-family:'Audiowide',sans-serif;color:var(--accent);letter-spacing:2px}
 
-  <style>
-    :root {
-      --bg1: #0a0a0a;
-      --bg2: #3D0000;
-      --panel: #150000;
-      --accent: #FF0000;
-      --accent2: #950101;
-      --accent-light: #FF3333;
-      --glass: rgba(26, 0, 0, 0.4);
-    }
+/* nav */
+.nav{width:100%;display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.nav .btn{padding:12px 14px;border-radius:10px;background:rgba(20,0,0,0.5);border:1px solid rgba(255,0,0,0.06);text-align:center;cursor:pointer;color:#fff}
+.nav .btn.active{background:linear-gradient(135deg,var(--accent2),rgba(255,0,0,0.18));box-shadow:0 6px 18px rgba(255,0,0,0.08);border-left:4px solid var(--accent)}
 
-    * {
-      box-sizing: border-box;
-    }
+/* main */
+.main{flex:1;padding:26px;overflow:hidden;display:flex;flex-direction:column;gap:18px}
+.header{display:flex;align-items:center;justify-content:space-between}
+.title{font-family:'Audiowide',sans-serif;font-size:26px;color:var(--accent)}
+.controls{display:flex;gap:8px;align-items:center}
 
-    body {
-      margin: 0;
-      height: 100vh;
-      display: flex;
-      background: linear-gradient(135deg, var(--bg1), var(--bg2));
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      color: white;
-      overflow: hidden;
-    }
+/* home quick cards (kept minimal) */
+.quick-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px}
 
-    /* Animated background particles */
-    body::before {
-      content: '';
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: 
-        radial-gradient(circle at 20% 50%, rgba(255, 0, 0, 0.1) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(255, 0, 0, 0.08) 0%, transparent 50%);
-      pointer-events: none;
-      animation: pulse 8s ease-in-out infinite;
-    }
+/* games area */
+.games-area{flex:1;display:flex;flex-direction:column;gap:12px;min-height:0}
+.filters{display:flex;gap:8px;flex-wrap:wrap}
+.category-btn{padding:8px 14px;border-radius:12px;background:rgba(20,0,0,0.45);border:1px solid rgba(255,0,0,0.06);cursor:pointer;color:#eee}
+.category-btn.active{background:linear-gradient(135deg,var(--accent2),var(--accent));box-shadow:0 6px 18px rgba(255,0,0,0.06);color:white}
 
-    @keyframes pulse {
-      0%, 100% { opacity: 0.5; }
-      50% { opacity: 0.8; }
-    }
+/* grid */
+.games-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px;padding:8px;overflow:auto;min-height:0}
+.game-card{background:linear-gradient(135deg,rgba(26,0,0,0.6),rgba(61,0,0,0.4));border:1px solid rgba(255,0,0,0.06);border-radius:14px;padding:12px;cursor:pointer;display:flex;flex-direction:column;gap:10px}
+.game-card img{width:100%;height:140px;object-fit:cover;border-radius:10px;border:2px solid rgba(255,0,0,0.06)}
+.game-card h3{margin:0;font-size:16px;color:var(--accent-light)}
 
-    /* SIDEBAR */
-    .sidebar {
-      width: 260px;
-      background: linear-gradient(180deg, rgba(0, 0, 0, 0.95), rgba(61, 0, 0, 0.85));
-      backdrop-filter: blur(12px);
-      display: flex;
-      flex-direction: column;
-      padding: 28px 20px;
-      border-right: 1px solid rgba(255, 0, 0, 0.3);
-      box-shadow: 4px 0 30px rgba(255, 0, 0, 0.2);
-      position: relative;
-    }
+/* embed */
+.embed-wrap{display:none;flex-direction:column;gap:12px}
+.embed-wrap.active{display:flex}
+.embed-frame{height:calc(100vh - 220px);width:100%;border-radius:10px;border:2px solid var(--accent2);overflow:hidden}
+.embed-frame iframe{width:100%;height:100%;border:0;background:#000}
 
-    .sidebar::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 1px;
-      height: 100%;
-      background: linear-gradient(180deg, transparent, var(--accent), transparent);
-      opacity: 0.6;
-    }
+/* utilities */
+.note{color:rgba(255,255,255,0.7);font-size:13px}
+.footer{font-size:13px;color:rgba(255,255,255,0.6);display:flex;justify-content:space-between;align-items:center}
 
-    .logo" style="background:#000; border-radius:16px; padding:8px; {
-      font-family: 'Audiowide', sans-serif;
-      font-size: 28px;
-      text-align: center;
-      color: var(--accent);
-      margin-bottom: 35px;
-      text-shadow: 0 0 20px rgba(255, 0, 0, 0.8), 0 0 40px rgba(255, 0, 0, 0.4);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
-      letter-spacing: 2px;
-    }
-
-    .logo-icon {
-      width: 70px;
-      height: 70px;
-      background: linear-gradient(135deg, var(--accent), var(--accent2), #330000);
-      border-radius: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 
-        0 0 30px rgba(255, 0, 0, 0.6),
-        inset 0 2px 20px rgba(255, 255, 255, 0.1);
-      border: 2px solid var(--accent-light);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .logo-icon img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      padding: 8px;
-    }
-
-    .logo-icon::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-      transform: rotate(45deg);
-      animation: shine 3s infinite;
-    }
-
-    @keyframes shine {
-      0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-      100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
-    }
-
-    .nav-item {
-      padding: 15px 18px;
-      margin-bottom: 10px;
-      background: rgba(26, 0, 0, 0.6);
-      border-radius: 12px;
-      cursor: pointer;
-      text-align: center;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      border: 1px solid rgba(61, 0, 0, 0.5);
-      user-select: none;
-      font-weight: 500;
-      letter-spacing: 0.5px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .nav-item::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 0, 0, 0.2), transparent);
-      transition: left 0.5s;
-    }
-
-    .nav-item:hover::before {
-      left: 100%;
-    }
-
-    .nav-item:hover {
-      background: rgba(149, 1, 1, 0.4);
-      border-color: var(--accent-light);
-      box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
-      transform: translateX(5px);
-    }
-
-    .nav-item.active {
-      background: linear-gradient(135deg, rgba(149, 1, 1, 0.8), rgba(61, 0, 0, 0.8));
-      border-color: var(--accent);
-      box-shadow: 
-        0 0 20px rgba(255, 0, 0, 0.5),
-        inset 0 1px 10px rgba(255, 255, 255, 0.1);
-      transform: translateX(5px);
-    }
-
-    /* MAIN PANEL */
-    .main-container {
-      flex: 1;
-      padding: 40px;
-      overflow-y: auto;
-      border: 1px solid rgba(255, 0, 0, 0.3);
-      border-radius: 24px;
-      margin: 24px;
-      background: rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(16px);
-      box-shadow:
-        0 8px 32px rgba(255, 0, 0, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.05);
-      position: relative;
-    }
-
-    .main-container::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      border-radius: 24px;
-      padding: 1px;
-      background: linear-gradient(135deg, rgba(255, 0, 0, 0.3), transparent, rgba(255, 0, 0, 0.3));
-      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      pointer-events: none;
-    }
-
-    .page {
-      display: none;
-      animation: fade 0.25s;
-      height: 100%;
-    }
-
-    .page.active {
-      display: block;
-    }
-
-    @keyframes fade {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* HOME PAGE */
-    .home-hero {
-      text-align: center;
-      margin-bottom: 60px;
-    }
-
-    .home-hero h1 {
-      font-family: 'Audiowide', sans-serif;
-      font-size: 56px;
-      margin: 0 0 20px 0;
-      background: linear-gradient(135deg, var(--accent), var(--accent-light));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      text-shadow: 0 0 60px rgba(255, 0, 0, 0.5);
-      letter-spacing: 3px;
-    }
-
-    .home-hero p {
-      font-size: 20px;
-      color: rgba(255, 255, 255, 0.7);
-      max-width: 600px;
-      margin: 0 auto;
-      line-height: 1.6;
-    }
-
-    .quick-nav {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 24px;
-      margin-top: 40px;
-    }
-
-    .quick-nav-card {
-      background: linear-gradient(135deg, rgba(26, 0, 0, 0.8), rgba(61, 0, 0, 0.6));
-      border: 1px solid rgba(255, 0, 0, 0.3);
-      border-radius: 20px;
-      padding: 32px;
-      cursor: pointer;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .quick-nav-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(135deg, transparent, rgba(255, 0, 0, 0.1));
-      opacity: 0;
-      transition: opacity 0.4s;
-    }
-
-    .quick-nav-card:hover::before {
-      opacity: 1;
-    }
-
-    .quick-nav-card:hover {
-      border-color: var(--accent);
-      box-shadow: 
-        0 8px 32px rgba(255, 0, 0, 0.4),
-        inset 0 1px 20px rgba(255, 255, 255, 0.1);
-      transform: translateY(-8px) scale(1.02);
-    }
-
-    .quick-nav-icon {
-      font-size: 48px;
-      margin-bottom: 16px;
-      filter: drop-shadow(0 0 20px rgba(255, 0, 0, 0.6));
-    }
-
-    .quick-nav-card h3 {
-      font-size: 24px;
-      margin: 0 0 12px 0;
-      color: var(--accent);
-      font-weight: 600;
-    }
-
-    .quick-nav-card p {
-      font-size: 14px;
-      color: rgba(255, 255, 255, 0.6);
-      margin: 0;
-      line-height: 1.5;
-    }
-
-    /* GAMES GRID */
-    .games-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-      gap: 28px;
-      padding-right: 10px;
-    }
-
-    .game-card {
-      background: linear-gradient(135deg, rgba(26, 0, 0, 0.8), rgba(61, 0, 0, 0.6));
-      border: 1px solid rgba(255, 0, 0, 0.3);
-      border-radius: 20px;
-      padding: 14px;
-      overflow: hidden;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      display: flex;
-      flex-direction: column;
-      cursor: pointer;
-      position: relative;
-    }
-
-    .game-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(135deg, transparent, rgba(255, 0, 0, 0.1));
-      opacity: 0;
-      transition: opacity 0.4s;
-    }
-
-    .game-card:hover::before {
-      opacity: 1;
-    }
-
-    .game-card:hover {
-      border-color: var(--accent);
-      box-shadow: 0 12px 40px rgba(255, 0, 0, 0.3);
-      transform: translateY(-8px) scale(1.02);
-    }
-
-    .game-card img {
-      width: 100%;
-      border-radius: 14px;
-      aspect-ratio: 16/9;
-      object-fit: cover;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-    }
-
-    .game-card h3 {
-      margin: 16px 0 0 0;
-      font-size: 18px;
-      color: var(--accent-light);
-      font-weight: 600;
-    }
-
-    /* IFRAME CONTAINER */
-    .iframe-container {
-      width: 100%;
-      height: calc(100vh - 140px);
-      border: 2px solid var(--accent2);
-      border-radius: 12px;
-      overflow: hidden;
-      background: #000;
-      box-shadow: 0 0 20px #ff000033;
-    }
-
-    .iframe-container iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-    }
-
-    /* GAME EMBED */
-    .game-embed {
-      width: 100%;
-      height: calc(100vh - 140px);
-      border: 2px solid var(--accent2);
-      border-radius: 12px;
-      overflow: hidden;
-      background: #000;
-      box-shadow: 0 0 20px #ff000033;
-      display: none;
-    }
-
-    .game-embed.active {
-      display: block;
-    }
-
-    .game-embed iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-    }
-
-    .back-button {
-      padding: 12px 24px;
-      background: linear-gradient(135deg, var(--accent2), var(--accent));
-      border: 1px solid var(--accent-light);
-      border-radius: 12px;
-      color: white;
-      cursor: pointer;
-      margin-bottom: 20px;
-      display: inline-block;
-      transition: all 0.3s;
-      font-weight: 600;
-      box-shadow: 0 4px 12px rgba(255, 0, 0, 0.3);
-    }
-
-    .back-button:hover {
-      background: linear-gradient(135deg, var(--accent), var(--accent-light));
-      box-shadow: 0 6px 20px rgba(255, 0, 0, 0.5);
-      transform: translateY(-2px);
-    }
-
-    h2 {
-      font-family: 'Audiowide', sans-serif;
-      font-size: 36px;
-      letter-spacing: 2px;
-    }
-
-    /* CATEGORY FILTERS */
-    .category-filters {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-bottom: 32px;
-      padding: 20px;
-      background: rgba(26, 0, 0, 0.5);
-      border-radius: 16px;
-      border: 1px solid rgba(255, 0, 0, 0.2);
-    }
-
-    .category-btn {
-      padding: 10px 20px;
-      background: rgba(26, 0, 0, 0.7);
-      border: 1px solid rgba(255, 0, 0, 0.3);
-      border-radius: 10px;
-      color: rgba(255, 255, 255, 0.7);
-      cursor: pointer;
-      transition: all 0.3s;
-      font-weight: 500;
-      font-size: 14px;
-    }
-
-    .category-btn:hover {
-      border-color: var(--accent-light);
-      color: white;
-      background: rgba(149, 1, 1, 0.4);
-      box-shadow: 0 0 15px rgba(255, 0, 0, 0.3);
-    }
-
-    .category-btn.active {
-      background: linear-gradient(135deg, var(--accent2), var(--accent));
-      border-color: var(--accent);
-      color: white;
-      box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
-    }
-  </style>
+/* small screens */
+@media (max-width:900px){.sidebar{display:none}.games-grid{grid-template-columns:repeat(2,1fr)}}
+</style>
 </head>
-
 <body>
+<div class="app">
 
-  <!-- SIDEBAR -->
-  <div class="sidebar">
-    <div class="logo">
-      <div class="logo-icon">
-        <img id="logo" src="logonobg.png" style="
-  width:130px;
-  background:#1a0000;
-  padding:10px;
-  border-radius:18px;
-">
-      </div>
-      <span>VIXEL</span>
+  <aside class="sidebar">
+    <div class="logo-wrap">
+      <div class="logo-icon"><img id="logoImg" src="logonobg.png" alt="Vixel"></div>
+      <div class="brand">VIXEL</div>
     </div>
 
-    <div class="nav-item active" onclick="loadPage('home', this)">Home</div>
-    <div class="nav-item" onclick="loadPage('games', this)">Games</div>
-    <div class="nav-item" onclick="loadPage('ai', this)">AI</div>
-    <div class="nav-item" onclick="loadPage('chat', this)">Chat</div>
-    <div class="nav-item" onclick="loadPage('proxy', this)">Pøx-y</div>
-    <div class="nav-item" onclick="openSiteInNewTab()">Site</div>
-  </div>
+    <nav class="nav" role="navigation">
+      <div class="btn active" data-page="home" onclick="navTo('home', this)">Home</div>
+      <div class="btn" data-page="games" onclick="navTo('games', this)">Games</div>
+      <div class="btn" data-page="ai" onclick="navTo('ai', this)">AI</div>
+      <div class="btn" data-page="chat" onclick="navTo('chat', this)">Chat</div>
+      <div class="btn" data-page="proxy" onclick="navTo('proxy', this)">Pøx-y</div>
+      <div class="btn" onclick="openSite()">Site</div>
+    </nav>
 
-  <!-- MAIN CONTENT -->
-  <div class="main-container">
+    <div style="margin-top:auto;font-size:12px;color:rgba(255,255,255,0.6);text-align:center">
+      built for VIXEL — <span id="status">loading...</span>
+    </div>
+  </aside>
 
-    <!-- HOME -->
+  <main class="main">
+    <div class="header">
+      <div class="title">Vixel Hub</div>
+      <div class="controls">
+        <div class="note" id="gamesCount"></div>
+      </div>
+    </div>
+
+    <!-- Pages -->
     <div id="page-home" class="page active">
-      <div class="home-hero">
-        <h1>VIXEL HUB</h1>
-        <p>Your ultimate gaming and productivity hub. Access games, AI tools, chat, and proxies — all in one beautifully crafted place.</p>
-      </div>
-
-      <div class="quick-nav">
-        <div class="quick-nav-card" onclick="navigateTo('games')">
-          <div class="quick-nav-icon">🎮</div>
-          <h3>Games</h3>
-          <p>Explore our collection of exciting games</p>
+      <div class="quick-grid">
+        <div style="background:var(--glass);padding:18px;border-radius:12px">
+          <h3 style="margin:0;color:var(--accent)">Welcome</h3>
+          <p class="note">Play games inline, use AI, chat, and Pøx-y. Click Games to load the full list.</p>
         </div>
-
-        <div class="quick-nav-card" onclick="navigateTo('ai')">
-          <div class="quick-nav-icon">🤖</div>
-          <h3>AI Assistant</h3>
-          <p>Chat with advanced AI technology</p>
-        </div>
-
-        <div class="quick-nav-card" onclick="navigateTo('chat')">
-          <div class="quick-nav-icon">💬</div>
-          <h3>Chat</h3>
-          <p>Connect and communicate instantly</p>
-        </div>
-
-        <div class="quick-nav-card" onclick="navigateTo('proxy')">
-          <div class="quick-nav-icon">🌐</div>
-          <h3>Pøx-y</h3>
-          <p>Secure proxy browsing experience</p>
+        <div style="background:var(--glass);padding:18px;border-radius:12px">
+          <h3 style="margin:0;color:var(--accent)">Tip</h3>
+          <p class="note">If some games 404, the script will try to auto-fix relative links to PeteZah's domain.</p>
         </div>
       </div>
     </div>
 
-    <!-- GAMES -->
-    <div id="page-games" class="page">
-      <h2 style="color: var(--accent); margin-bottom: 20px;">Games</h2>
-      <div class="category-filters" id="category-filters"></div>
-      <div class="games-grid" id="games-container"></div>
-      <div id="game-embed" class="game-embed">
-        <button class="back-button" onclick="backToGames()">← Back to Games</button>
-        <iframe id="game-frame" src=""></iframe>
+    <div id="page-games" class="page" style="display:none">
+      <div class="games-area">
+        <div class="filters" id="filters"></div>
+        <div class="games-grid" id="gamesGrid" role="list"></div>
+
+        <div class="embed-wrap" id="embedWrap">
+          <button class="btn" onclick="backToGrid()" style="background:linear-gradient(90deg,var(--accent2),var(--accent));border:none;padding:10px 14px;border-radius:10px">← Back</button>
+          <div class="embed-frame" id="embedFrame"><iframe id="gameIframe" src="" frameborder="0" allowfullscreen></iframe></div>
+        </div>
       </div>
     </div>
 
-    <!-- AI -->
-    <div id="page-ai" class="page">
-      <h2 style="color: var(--accent); margin-bottom: 20px;">AI Assistant</h2>
-      <div class="iframe-container">
-        <iframe src="https://andreyzhorik.github.io/vixel-ai/"></iframe>
+    <div id="page-ai" class="page" style="display:none">
+      <div style="background:var(--glass);padding:18px;border-radius:12px">
+        <h3 style="color:var(--accent)">AI</h3>
+        <p class="note">AI page embedded below.</p>
+        <div style="height:520px;border-radius:10px;overflow:hidden;border:2px solid var(--accent2)"><iframe src="https://andreyzhorik.github.io/vixel-ai/" style="width:100%;height:100%;border:0"></iframe></div>
       </div>
     </div>
 
-    <!-- CHAT -->
-    <div id="page-chat" class="page">
-      <h2 style="color: var(--accent); margin-bottom: 20px;">Chat</h2>
-      <div class="iframe-container">
-        <iframe src="https://andreyzhorik.github.io/vixel-chat/"></iframe>
+    <div id="page-chat" class="page" style="display:none">
+      <div style="background:var(--glass);padding:18px;border-radius:12px">
+        <h3 style="color:var(--accent)">Chat</h3>
+        <div style="height:520px;border-radius:10px;overflow:hidden;border:2px solid var(--accent2)"><iframe src="https://andreyzhorik.github.io/vixel-chat/" style="width:100%;height:100%;border:0"></iframe></div>
       </div>
     </div>
 
-    <!-- PROXY -->
-    <div id="page-proxy" class="page">
-      <h2 style="color: var(--accent); margin-bottom: 20px;">Pøx-y</h2>
-      <div class="iframe-container">
-        <iframe src="https://andreyzhorik.github.io/GRIP/"></iframe>
+    <div id="page-proxy" class="page" style="display:none">
+      <div style="background:var(--glass);padding:18px;border-radius:12px">
+        <h3 style="color:var(--accent)">Pøx-y</h3>
+        <div style="height:520px;border-radius:10px;overflow:hidden;border:2px solid var(--accent2)"><iframe src="https://andreyzhorik.github.io/GRIP/" style="width:100%;height:100%;border:0"></iframe></div>
       </div>
     </div>
 
-    <!-- SITE -->
-    <div id="page-site" class="page">
-      <h2 style="color: var(--accent); margin-bottom: 20px;">Vixel Site</h2>
-      <div class="iframe-container">
-        <iframe src="https://sites.google.com/view/vixelhub"></iframe>
-      </div>
+    <div class="footer">
+      <div class="note">Made with 🔥</div>
+      <div class="note" id="debug"></div>
     </div>
+  </main>
+</div>
 
-  </div>
+<script>
+/*
+  Vixel hub games loader:
+  - Attempts to fetch your repo games.json (raw).
+  - Falls back to PeteZah's games JSON.
+  - If both fail, uses a tiny embedded sample.
+  - Fixes relative URLs ("/...") to point at https://petezahgames.com
+*/
 
-  <!-- JS -->
-  <script>
-    function loadPage(page, element) {
-      // switch active tab
-      document.querySelectorAll(".nav-item").forEach(i => i.classList.remove("active"));
-      if (element) element.classList.add("active");
+// Raw URLs we'll try (order matters)
+const RAW_YOUR_JSON = "https://raw.githubusercontent.com/andreyzhorik/VIXEL/main/games.json";
+const RAW_PETEZAH_JSON = "https://raw.githubusercontent.com/PeteZah-Games/PeteZahGames/main/public/storage/data/games.json";
 
-      // hide all pages
-      document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
-
-      // show selected page
-      if (page === "home") document.getElementById("page-home").classList.add("active");
-      else if (page === "games") {
-        document.getElementById("page-games").classList.add("active");
-        document.getElementById("game-embed").classList.remove("active");
-        document.getElementById("games-container").style.display = "grid";
-      }
-      else if (page === "ai") document.getElementById("page-ai").classList.add("active");
-      else if (page === "chat") document.getElementById("page-chat").classList.add("active");
-      else if (page === "proxy") document.getElementById("page-proxy").classList.add("active");
-      else if (page === "site") document.getElementById("page-site").classList.add("active");
-    }
-
-    function navigateTo(page) {
-      const navItems = document.querySelectorAll(".nav-item");
-      let targetElement = null;
-      
-      navItems.forEach(item => {
-        if (item.textContent.trim().toLowerCase() === page.toLowerCase() || 
-            (page === 'proxy' && item.textContent.trim().includes('Pøx-y'))) {
-          targetElement = item;
-        }
-      });
-      
-      if (targetElement) {
-        loadPage(page, targetElement);
-      }
-    }
-
-    function openSiteInNewTab() {
-      window.open('https://sites.google.com/view/vixelhub', '_blank');
-    }
-
-    function playGame(embedUrl) {
-  document.getElementById("games-container").style.display = "none";
-  document.getElementById("game-embed").classList.add("active");
-  document.getElementById("game-frame").src = embedUrl;
-}
-
-function backToGames() {
-  document.getElementById("game-embed").classList.remove("active");
-  document.getElementById("games-container").style.display = "grid";
-  document.getElementById("game-frame").src = "";
-}
-
-// GAMES DATA
 let allGames = [];
-let currentCategory = 'all';
+let categoriesSet = new Set();
+const statusEl = document.getElementById("status");
+const debugEl = document.getElementById("debug");
+const gamesCountEl = document.getElementById("gamesCount");
 
-// LOAD GAMES FROM GITHUB JSON
-fetch("https://raw.githubusercontent.com/andreyzhorik/VIXEL/main/games.json")
-  .then(res => res.json())
-  .then(data => {
-    // Because your JSON now has { "games": [ ... ] }
-    allGames = data.games;  
-    createCategoryFilters();
-    displayGames('all');
-  })
-  .catch(err => console.log("Games JSON error:", err));
+// small fallback data (keeps UI usable)
+const FALLBACK = {
+  games: [
+    { label: "Fallback-1", imageUrl: "https://petezahgames.com/storage/images/main/default.jpg", url: "/iframe.html?url=/storage/ag/g/tag", categories: ["action"] },
+    { label: "Fallback-2", imageUrl: "https://petezahgames.com/storage/images/main/default.jpg", url: "/iframe.html?url=/storage/ag/g/polytrack/", categories: ["racing"] }
+  ]
+};
 
-function createCategoryFilters() {
-  const categories = ['All', 'Action', 'Racing', '2 Player', 'Skill', 'Shooting', 'Io', 'Strategy', 'Sports'];
-  const filtersContainer = document.getElementById("category-filters");
-  
-  categories.forEach(category => {
-    const btn = document.createElement("button");
-    btn.className = "category-btn" + (category === 'All' ? ' active' : '');
-    btn.textContent = category;
-    btn.onclick = () => filterByCategory(category.toLowerCase(), btn);
-    filtersContainer.appendChild(btn);
-  });
-}
-
-function filterByCategory(category, btnElement) {
-  currentCategory = category;
-  
-  // Update active button
-  document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
-  btnElement.classList.add('active');
-  
-  displayGames(category);
-}
-
-function displayGames(category) {
-  const container = document.getElementById("games-container");
-  container.innerHTML = '';
-  
-  const filteredGames = category === 'all' 
-    ? allGames 
-    : allGames.filter(game => 
-        game.categories && game.categories.some(cat => 
-          cat.toLowerCase() === category || 
-          (category === '2 player' && cat.toLowerCase() === '2 player')
-        )
-      );
-  
-  filteredGames.forEach(game => {
-    const card = document.createElement("div");
-    card.className = "game-card";
-    card.onclick = () => playGame(game.url);
-
-    card.innerHTML = `
-      <img src="${game.imageUrl}" alt="${game.label}" />
-      <h3>${game.label}</h3>
-    `;
-
-    container.appendChild(card);
-  });
-
-  // if no games
-  if (!filteredGames.length) {
-    container.innerHTML = `<p style="color:rgba(255,255,255,0.6)">No games found for this category.</p>`;
-  }
-}
-  function fixUrl(url) {
-    if (url.startsWith("/")) return "https://petezahgames.com" + url;
-    return url;
-  }
-
-  // Wrap loadGames if exists
-  if (typeof loadGames === "function") {
-    const originalLoadGames = loadGames;
-    loadGames = async function() {
-      const games = await originalLoadGames();
-      return games.map(g => ({
-        ...g,
-        url: fixUrl(g.url),
-        imageUrl: fixUrl(g.imageUrl)
-      }));
+function fixUrl(url){
+  if(!url) return "";
+  try{
+    // if absolute already, return untouched
+    const u = new URL(url, "https://example.invalid");
+    if(u.protocol === "http:" || u.protocol === "https:"){
+      // if original url had scheme, return original (handles full urls)
+      if(url.startsWith("http://") || url.startsWith("https://")) return url;
     }
+  }catch(e){
+    // fall through
   }
+  // If starts with '/', assume PeteZah origin (their assets + iframe path)
+  if(url.startsWith("/")) return "https://petezahgames.com" + url;
+  // If it's a relative path that begins with 'storage' or similar, prefix with PeteZah too
+  if(!url.startsWith("http") && (url.startsWith("storage") || url.startsWith("pages") || url.startsWith("iframe.html"))) {
+    return "https://petezahgames.com/" + url.replace(/^\/+/, "");
+  }
+  // otherwise return as-is
+  return url;
+}
+
+async function tryFetch(url){
+  try{
+    const res = await fetch(url, {cache: "no-cache"});
+    if(!res.ok) throw new Error("HTTP " + res.status);
+    const json = await res.json();
+    return json;
+  }catch(err){
+    console.warn("fetch failed", url, err);
+    debugEl.textContent = `fetch fail ${url} — ${err}`;
+    return null;
+  }
+}
+
+async function loadJSONAndInit(){
+  statusEl.textContent = "loading JSON...";
+  let data = await tryFetch(RAW_YOUR_JSON);
+  if(!data){
+    statusEl.textContent = "fallback: trying PeteZah JSON...";
+    data = await tryFetch(RAW_PETEZAH_JSON);
+  }
+  if(!data){
+    statusEl.textContent = "using embedded fallback";
+    data = FALLBACK;
+  } else {
+    statusEl.textContent = "games loaded";
+  }
+
+  // support both shapes: root array OR { games: [...] }
+  if(Array.isArray(data)) {
+    allGames = data;
+  } else if(data.games && Array.isArray(data.games)) {
+    allGames = data.games;
+  } else {
+    // try to find array property
+    const arr = Object.values(data).find(v => Array.isArray(v));
+    allGames = arr || FALLBACK.games;
+  }
+
+  // normalize & collect categories
+  categoriesSet.clear();
+  allGames = allGames.map(g => {
+    const safe = {
+      label: g.label || g.title || "Untitled",
+      imageUrl: g.imageUrl || g.image || g.img || "",
+      url: g.url || g.embed || g.link || "",
+      categories: g.categories || g.tags || []
+    };
+    // fix relative urls
+    safe.imageUrl = fixUrl(safe.imageUrl);
+    safe.url = fixUrl(safe.url);
+    // ensure categories lowercased canonical for UI
+    safe.categories = (safe.categories||[]).map(c=>String(c).toLowerCase());
+    safe.categories.forEach(c => categoriesSet.add(c));
+    return safe;
+  });
+
+  // Add 'all' and nice sorted categories
+  const categories = Array.from(categoriesSet).filter(Boolean).sort();
+  renderCategoryFilters(categories);
+  renderGamesGrid(allGames);
+  gamesCountEl.textContent = `${allGames.length} games`;
+  statusEl.textContent = "ready";
+}
+
+// UI rendering
+function renderCategoryFilters(categories){
+  const filters = document.getElementById("filters");
+  filters.innerHTML = '';
+  // All button
+  const allBtn = createCategoryBtn('all','All', true);
+  filters.appendChild(allBtn);
+  // dynamic categories
+  categories.forEach(cat => {
+    const label = cat.replace(/-/g,' ');
+    filters.appendChild(createCategoryBtn(cat, label, false));
+  });
+}
+
+function createCategoryBtn(catKey, display, active){
+  const btn = document.createElement('button');
+  btn.className = 'category-btn' + (active ? ' active' : '');
+  btn.textContent = display;
+  btn.onclick = () => {
+    document.querySelectorAll('.category-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    filterByCategory(catKey);
+  };
+  return btn;
+}
+
+function filterByCategory(cat){
+  const key = String(cat).toLowerCase();
+  if(key === 'all') {
+    renderGamesGrid(allGames);
+    return;
+  }
+  const filtered = allGames.filter(g => (g.categories||[]).some(c => c === key || c.replace(/\s+/g,'') === key.replace(/\s+/g,'')));
+  renderGamesGrid(filtered);
+}
+
+// render grid
+function renderGamesGrid(list){
+  const grid = document.getElementById("gamesGrid");
+  document.getElementById("embedWrap").classList.remove('active');
+  grid.innerHTML = '';
+  if(!list.length){
+    grid.innerHTML = `<div class="note">No games found.</div>`;
+    return;
+  }
+  list.forEach(g => {
+    const card = document.createElement('div');
+    card.className = 'game-card';
+    const img = document.createElement('img');
+    img.src = g.imageUrl || 'https://petezahgames.com/storage/images/main/default.jpg';
+    img.alt = g.label;
+    img.onerror = () => { img.src = 'https://petezahgames.com/storage/images/main/default.jpg'; };
+    const h3 = document.createElement('h3');
+    h3.textContent = g.label;
+    card.appendChild(img);
+    card.appendChild(h3);
+    card.onclick = () => openGameInEmbed(g);
+    grid.appendChild(card);
+  });
+}
+
+function openGameInEmbed(game){
+  // Some PeteZah game urls are like /iframe.html?url=/storage/...
+  // We already fixed to full URL. Some embed pages disallow framing; that's outside our control.
+  const iframe = document.getElementById('gameIframe');
+  document.getElementById('gamesGrid').scrollTop = 0;
+  document.getElementById('embedWrap').classList.add('active');
+  iframe.src = game.url || '';
+  // show debug if iframe 404 or blocked - cannot access cross-origin, but user will see message in console
+  debugEl.textContent = `loading ${game.url}`;
+}
+
+function backToGrid(){
+  const iframe = document.getElementById('gameIframe');
+  iframe.src = '';
+  document.getElementById('embedWrap').classList.remove('active');
+}
+
+// nav actions
+function navTo(page, el){
+  document.querySelectorAll('.nav .btn').forEach(b=>b.classList.remove('active'));
+  if(el) el.classList.add('active');
+  document.querySelectorAll('.page').forEach(p=>p.style.display='none');
+  const pg = document.getElementById('page-'+page);
+  if(pg) pg.style.display = 'block';
+  // if switching to games and not yet loaded, ensure loaded
+  if(page === 'games') {
+    // nothing special: data loaded at startup
+  }
+}
+function openSite(){ window.open('https://sites.google.com/view/vixelhub','_blank','noopener'); }
+
+// initialize
+document.addEventListener('DOMContentLoaded', () => {
+  loadJSONAndInit();
+  // set initial page home
+  navTo('home', document.querySelector('.nav .btn[data-page="home"]'));
+});
 </script>
-
-  <script>
-    async function loadGames() {
-      const res = await fetch('games.json');
-      const data = await res.json();
-
-      function fixUrl(url) {
-        if (url.startsWith('/')) return 'https://petezahgames.com' + url;
-        return url;
-      }
-
-      const content = document.getElementById('content');
-      content.innerHTML = '<h1>Games</h1><div class="games" id="gamesGrid"></div>';
-
-      const grid = document.getElementById('gamesGrid');
-
-      data.games.forEach(g => {
-        const img = fixUrl(g.imageUrl || '');
-        const link = fixUrl(g.url || '#');
-
-        const card = document.createElement('div');
-        card.className = 'game-card';
-        card.innerHTML = `
-          <img src="${img}" onerror="this.src='https://petezahgames.com/storage/images/main/default.jpg'">
-          <p>${g.label}</p>
-        `;
-        card.onclick = () => {
-          document.getElementById('content').innerHTML = `<iframe src="${link}" style="width:100%;height:90vh;border:0;"></iframe>`;
-        };
-        grid.appendChild(card);
-      });
-    }
-
-    function loadHome() {
-      document.getElementById('content').innerHTML = `
-        <h1>Welcome to VIXEL</h1>
-        <p>Home content goes here.</p>
-      `;
-    }
-  </script>
 </body>
 </html>

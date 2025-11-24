@@ -77,7 +77,7 @@
       opacity: 0.6;
     }
 
-    .logo {
+    .logo" style="background:#000; border-radius:16px; padding:8px; {
       font-family: 'Audiowide', sans-serif;
       font-size: 28px;
       text-align: center;
@@ -702,7 +702,63 @@ function displayGames(category) {
     container.innerHTML = `<p style="color:rgba(255,255,255,0.6)">No games found for this category.</p>`;
   }
 }
+  function fixUrl(url) {
+    if (url.startsWith("/")) return "https://petezahgames.com" + url;
+    return url;
+  }
+
+  // Wrap loadGames if exists
+  if (typeof loadGames === "function") {
+    const originalLoadGames = loadGames;
+    loadGames = async function() {
+      const games = await originalLoadGames();
+      return games.map(g => ({
+        ...g,
+        url: fixUrl(g.url),
+        imageUrl: fixUrl(g.imageUrl)
+      }));
+    }
+  }
 </script>
 
+  <script>
+    async function loadGames() {
+      const res = await fetch('games.json');
+      const data = await res.json();
+
+      function fixUrl(url) {
+        if (url.startsWith('/')) return 'https://petezahgames.com' + url;
+        return url;
+      }
+
+      const content = document.getElementById('content');
+      content.innerHTML = '<h1>Games</h1><div class="games" id="gamesGrid"></div>';
+
+      const grid = document.getElementById('gamesGrid');
+
+      data.games.forEach(g => {
+        const img = fixUrl(g.imageUrl || '');
+        const link = fixUrl(g.url || '#');
+
+        const card = document.createElement('div');
+        card.className = 'game-card';
+        card.innerHTML = `
+          <img src="${img}" onerror="this.src='https://petezahgames.com/storage/images/main/default.jpg'">
+          <p>${g.label}</p>
+        `;
+        card.onclick = () => {
+          document.getElementById('content').innerHTML = `<iframe src="${link}" style="width:100%;height:90vh;border:0;"></iframe>`;
+        };
+        grid.appendChild(card);
+      });
+    }
+
+    function loadHome() {
+      document.getElementById('content').innerHTML = `
+        <h1>Welcome to VIXEL</h1>
+        <p>Home content goes here.</p>
+      `;
+    }
+  </script>
 </body>
 </html>

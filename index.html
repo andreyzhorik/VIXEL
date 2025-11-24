@@ -10,11 +10,17 @@
 
   <style>
     :root {
-      --bg1: #000000;
+      --bg1: #0a0a0a;
       --bg2: #3D0000;
       --panel: #150000;
       --accent: #FF0000;
       --accent2: #950101;
+      --accent-light: #FF3333;
+      --glass: rgba(26, 0, 0, 0.4);
+    }
+
+    * {
+      box-sizing: border-box;
     }
 
     body {
@@ -22,85 +28,181 @@
       height: 100vh;
       display: flex;
       background: linear-gradient(135deg, var(--bg1), var(--bg2));
-      font-family: Arial, sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       color: white;
       overflow: hidden;
     }
 
+    /* Animated background particles */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(255, 0, 0, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(255, 0, 0, 0.08) 0%, transparent 50%);
+      pointer-events: none;
+      animation: pulse 8s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 0.8; }
+    }
+
     /* SIDEBAR */
     .sidebar {
-      width: 230px;
-      background: #000000cc;
-      backdrop-filter: blur(6px);
+      width: 260px;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0.95), rgba(61, 0, 0, 0.85));
+      backdrop-filter: blur(12px);
       display: flex;
       flex-direction: column;
-      padding: 22px;
-      border-right: 2px solid var(--accent);
-      box-shadow: 4px 0 20px #ff000044;
+      padding: 28px 20px;
+      border-right: 1px solid rgba(255, 0, 0, 0.3);
+      box-shadow: 4px 0 30px rgba(255, 0, 0, 0.2);
+      position: relative;
+    }
+
+    .sidebar::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 1px;
+      height: 100%;
+      background: linear-gradient(180deg, transparent, var(--accent), transparent);
+      opacity: 0.6;
     }
 
     .logo {
       font-family: 'Audiowide', sans-serif;
-      font-size: 32px;
+      font-size: 28px;
       text-align: center;
       color: var(--accent);
-      margin-bottom: 25px;
-      text-shadow: 0 0 10px var(--accent), 0 0 20px var(--accent2);
+      margin-bottom: 35px;
+      text-shadow: 0 0 20px rgba(255, 0, 0, 0.8), 0 0 40px rgba(255, 0, 0, 0.4);
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 8px;
+      gap: 12px;
+      letter-spacing: 2px;
     }
 
     .logo-icon {
-      width: 60px;
-      height: 60px;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      border-radius: 12px;
+      width: 70px;
+      height: 70px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2), #330000);
+      border-radius: 16px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 36px;
+      font-size: 42px;
       font-weight: bold;
-      box-shadow: 0 0 15px var(--accent);
-      border: 2px solid var(--accent);
+      box-shadow: 
+        0 0 30px rgba(255, 0, 0, 0.6),
+        inset 0 2px 20px rgba(255, 255, 255, 0.1);
+      border: 2px solid var(--accent-light);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .logo-icon::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+      transform: rotate(45deg);
+      animation: shine 3s infinite;
+    }
+
+    @keyframes shine {
+      0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+      100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
     }
 
     .nav-item {
-      padding: 13px;
-      margin-bottom: 12px;
-      background: #1a0000;
-      border-radius: 10px;
+      padding: 15px 18px;
+      margin-bottom: 10px;
+      background: rgba(26, 0, 0, 0.6);
+      border-radius: 12px;
       cursor: pointer;
       text-align: center;
-      transition: 0.2s;
-      border: 1px solid #3D0000;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 1px solid rgba(61, 0, 0, 0.5);
       user-select: none;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      position: relative;
+      overflow: hidden;
     }
 
-    .nav-item:hover,
+    .nav-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 0, 0, 0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .nav-item:hover::before {
+      left: 100%;
+    }
+
+    .nav-item:hover {
+      background: rgba(149, 1, 1, 0.4);
+      border-color: var(--accent-light);
+      box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+      transform: translateX(5px);
+    }
+
     .nav-item.active {
-      background: var(--accent2);
+      background: linear-gradient(135deg, rgba(149, 1, 1, 0.8), rgba(61, 0, 0, 0.8));
       border-color: var(--accent);
-      box-shadow: 0 0 10px #ff000066;
+      box-shadow: 
+        0 0 20px rgba(255, 0, 0, 0.5),
+        inset 0 1px 10px rgba(255, 255, 255, 0.1);
+      transform: translateX(5px);
     }
 
     /* MAIN PANEL */
     .main-container {
       flex: 1;
-      padding: 30px;
+      padding: 40px;
       overflow-y: auto;
-
-      border: 3px solid var(--accent);
-      border-radius: 20px;
-      margin: 20px;
-      background: #00000080;
-      backdrop-filter: blur(8px);
-
+      border: 1px solid rgba(255, 0, 0, 0.3);
+      border-radius: 24px;
+      margin: 24px;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(16px);
       box-shadow:
-        0 0 10px var(--accent),
-        0 0 20px var(--accent2),
-        0 0 30px var(--accent);
+        0 8px 32px rgba(255, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      position: relative;
+    }
+
+    .main-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 24px;
+      padding: 1px;
+      background: linear-gradient(135deg, rgba(255, 0, 0, 0.3), transparent, rgba(255, 0, 0, 0.3));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
     }
 
     .page {
@@ -119,51 +221,150 @@
     }
 
     /* HOME PAGE */
-    .home-box {
-      width: 100%;
-      padding: 40px;
-      background: #1a0000bb;
-      border-radius: 16px;
-      border: 2px solid var(--accent2);
+    .home-hero {
       text-align: center;
-      box-shadow: 0 0 20px #ff000033;
+      margin-bottom: 60px;
+    }
+
+    .home-hero h1 {
+      font-family: 'Audiowide', sans-serif;
+      font-size: 56px;
+      margin: 0 0 20px 0;
+      background: linear-gradient(135deg, var(--accent), var(--accent-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 0 60px rgba(255, 0, 0, 0.5);
+      letter-spacing: 3px;
+    }
+
+    .home-hero p {
+      font-size: 20px;
+      color: rgba(255, 255, 255, 0.7);
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    .quick-nav {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 24px;
+      margin-top: 40px;
+    }
+
+    .quick-nav-card {
+      background: linear-gradient(135deg, rgba(26, 0, 0, 0.8), rgba(61, 0, 0, 0.6));
+      border: 1px solid rgba(255, 0, 0, 0.3);
+      border-radius: 20px;
+      padding: 32px;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .quick-nav-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, transparent, rgba(255, 0, 0, 0.1));
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+
+    .quick-nav-card:hover::before {
+      opacity: 1;
+    }
+
+    .quick-nav-card:hover {
+      border-color: var(--accent);
+      box-shadow: 
+        0 8px 32px rgba(255, 0, 0, 0.4),
+        inset 0 1px 20px rgba(255, 255, 255, 0.1);
+      transform: translateY(-8px) scale(1.02);
+    }
+
+    .quick-nav-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      filter: drop-shadow(0 0 20px rgba(255, 0, 0, 0.6));
+    }
+
+    .quick-nav-card h3 {
+      font-size: 24px;
+      margin: 0 0 12px 0;
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .quick-nav-card p {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.6);
+      margin: 0;
+      line-height: 1.5;
     }
 
     /* GAMES GRID */
     .games-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 22px;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 28px;
       padding-right: 10px;
     }
 
     .game-card {
-      background: #1a0000cb;
-      border: 2px solid #3D0000;
-      border-radius: 16px;
-      padding: 10px;
+      background: linear-gradient(135deg, rgba(26, 0, 0, 0.8), rgba(61, 0, 0, 0.6));
+      border: 1px solid rgba(255, 0, 0, 0.3);
+      border-radius: 20px;
+      padding: 14px;
       overflow: hidden;
-      transition: 0.2s;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       display: flex;
       flex-direction: column;
       cursor: pointer;
+      position: relative;
+    }
+
+    .game-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, transparent, rgba(255, 0, 0, 0.1));
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+
+    .game-card:hover::before {
+      opacity: 1;
     }
 
     .game-card:hover {
       border-color: var(--accent);
-      box-shadow: 0 0 15px #ff000066;
-      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(255, 0, 0, 0.3);
+      transform: translateY(-8px) scale(1.02);
     }
 
     .game-card img {
       width: 100%;
-      border-radius: 12px;
+      border-radius: 14px;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
     }
 
     .game-card h3 {
-      margin: 10px 0 0 0;
+      margin: 16px 0 0 0;
       font-size: 18px;
-      color: var(--accent);
+      color: var(--accent-light);
+      font-weight: 600;
     }
 
     /* IFRAME CONTAINER */
@@ -206,20 +407,29 @@
     }
 
     .back-button {
-      padding: 10px 20px;
-      background: var(--accent2);
-      border: 2px solid var(--accent);
-      border-radius: 8px;
+      padding: 12px 24px;
+      background: linear-gradient(135deg, var(--accent2), var(--accent));
+      border: 1px solid var(--accent-light);
+      border-radius: 12px;
       color: white;
       cursor: pointer;
-      margin-bottom: 15px;
+      margin-bottom: 20px;
       display: inline-block;
-      transition: 0.2s;
+      transition: all 0.3s;
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(255, 0, 0, 0.3);
     }
 
     .back-button:hover {
-      background: var(--accent);
-      box-shadow: 0 0 10px var(--accent);
+      background: linear-gradient(135deg, var(--accent), var(--accent-light));
+      box-shadow: 0 6px 20px rgba(255, 0, 0, 0.5);
+      transform: translateY(-2px);
+    }
+
+    h2 {
+      font-family: 'Audiowide', sans-serif;
+      font-size: 36px;
+      letter-spacing: 2px;
     }
   </style>
 </head>
@@ -238,7 +448,7 @@
     <div class="nav-item" onclick="loadPage('ai', this)">AI</div>
     <div class="nav-item" onclick="loadPage('chat', this)">Chat</div>
     <div class="nav-item" onclick="loadPage('proxy', this)">Pøx-y</div>
-    <div class="nav-item" onclick="loadPage('site', this)">Site</div>
+    <div class="nav-item" onclick="openSiteInNewTab()">Site</div>
   </div>
 
   <!-- MAIN CONTENT -->
@@ -246,9 +456,35 @@
 
     <!-- HOME -->
     <div id="page-home" class="page active">
-      <div class="home-box">
-        <h2>Welcome to Vixel Hub</h2>
-        <p>Your games, AI tools, chat, and proxies — all in one place.</p>
+      <div class="home-hero">
+        <h1>VIXEL HUB</h1>
+        <p>Your ultimate gaming and productivity hub. Access games, AI tools, chat, and proxies — all in one beautifully crafted place.</p>
+      </div>
+
+      <div class="quick-nav">
+        <div class="quick-nav-card" onclick="navigateTo('games')">
+          <div class="quick-nav-icon">🎮</div>
+          <h3>Games</h3>
+          <p>Explore our collection of exciting games</p>
+        </div>
+
+        <div class="quick-nav-card" onclick="navigateTo('ai')">
+          <div class="quick-nav-icon">🤖</div>
+          <h3>AI Assistant</h3>
+          <p>Chat with advanced AI technology</p>
+        </div>
+
+        <div class="quick-nav-card" onclick="navigateTo('chat')">
+          <div class="quick-nav-icon">💬</div>
+          <h3>Chat</h3>
+          <p>Connect and communicate instantly</p>
+        </div>
+
+        <div class="quick-nav-card" onclick="navigateTo('proxy')">
+          <div class="quick-nav-icon">🌐</div>
+          <h3>Pøx-y</h3>
+          <p>Secure proxy browsing experience</p>
+        </div>
       </div>
     </div>
 
@@ -301,7 +537,7 @@
     function loadPage(page, element) {
       // switch active tab
       document.querySelectorAll(".nav-item").forEach(i => i.classList.remove("active"));
-      element.classList.add("active");
+      if (element) element.classList.add("active");
 
       // hide all pages
       document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
@@ -317,6 +553,26 @@
       else if (page === "chat") document.getElementById("page-chat").classList.add("active");
       else if (page === "proxy") document.getElementById("page-proxy").classList.add("active");
       else if (page === "site") document.getElementById("page-site").classList.add("active");
+    }
+
+    function navigateTo(page) {
+      const navItems = document.querySelectorAll(".nav-item");
+      let targetElement = null;
+      
+      navItems.forEach(item => {
+        if (item.textContent.trim().toLowerCase() === page.toLowerCase() || 
+            (page === 'proxy' && item.textContent.trim().includes('Pøx-y'))) {
+          targetElement = item;
+        }
+      });
+      
+      if (targetElement) {
+        loadPage(page, targetElement);
+      }
+    }
+
+    function openSiteInNewTab() {
+      window.open('https://sites.google.com/view/vixelhub', '_blank');
     }
 
     function playGame(embedUrl) {

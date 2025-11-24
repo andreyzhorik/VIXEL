@@ -30,7 +30,7 @@
     .item.active{background:var(--panel-2);border-left-color:var(--accent);box-shadow:0 0 12px rgba(255,0,0,0.08)}
 
     /* content area */
-    #content{flex:1;background:#0d0d0d;display:flex;flex-direction:column}
+    #content{flex:1;background:#0d0d0d;display:flex;flex-direction:column;border-left:2px solid var(--accent);}
     .toolbar{padding:12px 18px;border-bottom:1px solid rgba(255,255,255,0.03);display:flex;align-items:center;gap:12px}
     .title{font-weight:700;letter-spacing:1px}
 
@@ -155,7 +155,7 @@
       const listEl = document.getElementById('gamesList');
       listEl.innerHTML = '<div style="grid-column:1/-1;padding:8px;opacity:0.8">Loading games...</div>';
       try{
-        const res = await fetch('https://www.onlinegames.io/media/plugins/genGames/embed.json');
+        const res = await fetch('https://raw.githubusercontent.com/andreyzhorik/VIXEL/main/games.json');
         if(!res.ok) throw new Error('network');
         const data = await res.json();
         // data might be an array or object with items

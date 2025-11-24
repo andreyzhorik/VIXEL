@@ -641,7 +641,8 @@ let currentCategory = 'all';
 fetch("https://raw.githubusercontent.com/andreyzhorik/VIXEL/main/games.json")
   .then(res => res.json())
   .then(data => {
-    allGames = data;
+    // Because your JSON now has { "games": [ ... ] }
+    allGames = data.games;  
     createCategoryFilters();
     displayGames('all');
   })

@@ -99,14 +99,19 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 42px;
-      font-weight: bold;
       box-shadow: 
         0 0 30px rgba(255, 0, 0, 0.6),
         inset 0 2px 20px rgba(255, 255, 255, 0.1);
       border: 2px solid var(--accent-light);
       position: relative;
       overflow: hidden;
+    }
+
+    .logo-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      padding: 8px;
     }
 
     .logo-icon::before {
@@ -431,6 +436,44 @@
       font-size: 36px;
       letter-spacing: 2px;
     }
+
+    /* CATEGORY FILTERS */
+    .category-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 32px;
+      padding: 20px;
+      background: rgba(26, 0, 0, 0.5);
+      border-radius: 16px;
+      border: 1px solid rgba(255, 0, 0, 0.2);
+    }
+
+    .category-btn {
+      padding: 10px 20px;
+      background: rgba(26, 0, 0, 0.7);
+      border: 1px solid rgba(255, 0, 0, 0.3);
+      border-radius: 10px;
+      color: rgba(255, 255, 255, 0.7);
+      cursor: pointer;
+      transition: all 0.3s;
+      font-weight: 500;
+      font-size: 14px;
+    }
+
+    .category-btn:hover {
+      border-color: var(--accent-light);
+      color: white;
+      background: rgba(149, 1, 1, 0.4);
+      box-shadow: 0 0 15px rgba(255, 0, 0, 0.3);
+    }
+
+    .category-btn.active {
+      background: linear-gradient(135deg, var(--accent2), var(--accent));
+      border-color: var(--accent);
+      color: white;
+      box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+    }
   </style>
 </head>
 
@@ -439,7 +482,9 @@
   <!-- SIDEBAR -->
   <div class="sidebar">
     <div class="logo">
-      <div class="logo-icon">V</div>
+      <div class="logo-icon">
+        <img src="logonobg.png" alt="Vixel Logo">
+      </div>
       <span>VIXEL</span>
     </div>
 
@@ -491,6 +536,7 @@
     <!-- GAMES -->
     <div id="page-games" class="page">
       <h2 style="color: var(--accent); margin-bottom: 20px;">Games</h2>
+      <div class="category-filters" id="category-filters"></div>
       <div class="games-grid" id="games-container"></div>
       <div id="game-embed" class="game-embed">
         <button class="back-button" onclick="backToGames()">← Back to Games</button>
@@ -587,26 +633,69 @@
       document.getElementById("game-frame").src = "";
     }
 
+    // GAMES DATA
+    let allGames = [];
+    let currentCategory = 'all';
+
     // LOAD GAMES FROM GITHUB JSON
     fetch("https://andreyzhorik.github.io/VIXEL/games.json")
       .then(res => res.json())
       .then(data => {
-        const container = document.getElementById("games-container");
-
-        data.forEach(game => {
-          const card = document.createElement("div");
-          card.className = "game-card";
-          card.onclick = () => playGame(game.embed);
-
-          card.innerHTML = `
-            <img src="${game.image}" />
-            <h3>${game.title}</h3>
-          `;
-
-          container.appendChild(card);
-        });
+        allGames = data;
+        createCategoryFilters();
+        displayGames('all');
       })
       .catch(err => console.log("Games JSON error:", err));
+
+    function createCategoryFilters() {
+      const categories = ['All', 'Sports', 'Strategy', 'Racing', 'Action', 'Skill', 'Shooting', '2 Player', 'Io'];
+      const filtersContainer = document.getElementById("category-filters");
+      
+      categories.forEach(category => {
+        const btn = document.createElement("button");
+        btn.className = "category-btn" + (category === 'All' ? ' active' : '');
+        btn.textContent = category;
+        btn.onclick = () => filterByCategory(category.toLowerCase(), btn);
+        filtersContainer.appendChild(btn);
+      });
+    }
+
+    function filterByCategory(category, btnElement) {
+      currentCategory = category;
+      
+      // Update active button
+      document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+      btnElement.classList.add('active');
+      
+      displayGames(category);
+    }
+
+    function displayGames(category) {
+      const container = document.getElementById("games-container");
+      container.innerHTML = '';
+      
+      const filteredGames = category === 'all' 
+        ? allGames 
+        : allGames.filter(game => 
+            game.categories && game.categories.some(cat => 
+              cat.toLowerCase() === category || 
+              (category === '2 player' && cat.toLowerCase() === '2player')
+            )
+          );
+      
+      filteredGames.forEach(game => {
+        const card = document.createElement("div");
+        card.className = "game-card";
+        card.onclick = () => playGame(game.url);
+
+        card.innerHTML = `
+          <img src="${game.imageUrl}" alt="${game.label}" />
+          <h3>${game.label}</h3>
+        `;
+
+        container.appendChild(card);
+      });
+    }
   </script>
 
 </body>

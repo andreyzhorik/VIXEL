@@ -3,377 +3,466 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Vixel Hub — Games</title>
+<title>VIXEL Hub — Games</title>
 <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg1:#070707;
-  --bg2:#3D0000;
-  --panel:#150000;
-  --accent:#FF0000;
-  --accent2:#950101;
-  --accent-light:#FF3333;
-  --glass: rgba(26,0,0,0.45);
-}
-*{box-sizing:border-box}
-html,body{height:100%;margin:0;background:linear-gradient(135deg,var(--bg1),var(--bg2));color:#fff;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;}
-.app{display:flex;height:100vh;gap:18px;}
+  :root{
+    --bg1:#0a0a0a; --bg2:#3D0000; --panel:#150000; --accent:#FF0000; --accent2:#950101; --accent-light:#FF3333;
+    --glass: rgba(26,0,0,0.35);
+    --muted: rgba(255,255,255,0.7);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial;-webkit-font-smoothing:antialiased;color:#fff;background:linear-gradient(135deg,var(--bg1),var(--bg2))}
 
-/* Sidebar */
-.sidebar{
-  width:260px;
-  padding:22px;
-  background:linear-gradient(180deg,rgba(0,0,0,0.95),rgba(61,0,0,0.9));
-  border-right:2px solid rgba(255,0,0,0.12);
-  display:flex;flex-direction:column;align-items:center;gap:18px;
-}
-.logo-wrap{
-  width:100%;
-  display:flex;flex-direction:column;align-items:center;gap:10px;
-  background:#120000; /* dark red bg for logo contrast */
-  padding:10px;border-radius:14px;border:1px solid rgba(255,0,0,0.12);
-}
-.logo-icon{width:120px;height:120px;border-radius:14px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:linear-gradient(135deg,var(--accent2),#330000);padding:6px}
-.logo-icon img{width:100%;height:100%;object-fit:contain}
-.brand{font-family:'Audiowide',sans-serif;color:var(--accent);letter-spacing:2px}
+  .app{display:flex;height:100vh;gap:18px;padding:18px}
+  /* Sidebar */
+  #sidebar{width:260px;background:linear-gradient(180deg,rgba(0,0,0,0.95),rgba(61,0,0,0.85));padding:24px;border-radius:14px;border:1px solid rgba(255,0,0,0.06);display:flex;flex-direction:column;gap:14px;flex-shrink:0}
+  .logo{font-family:'Audiowide',sans-serif;color:var(--accent);font-size:26px;text-align:center;padding:6px 0;text-shadow:0 0 12px rgba(255,0,0,0.12);display:flex;flex-direction:column;align-items:center;gap:10px}
+  .logo-icon{width:110px;height:110px;border-radius:16px;background:#0a0000;display:flex;align-items:center;justify-content:center;border:2px solid rgba(255,0,0,0.12);box-shadow:0 6px 30px rgba(255,0,0,0.06) inset}
+  .logo-icon img{width:90%;height:90%;object-fit:contain;display:block}
+  .nav{display:flex;flex-direction:column;gap:8px;margin-top:6px}
+  .nav button{background:transparent;border:1px solid rgba(255,255,255,0.04);padding:10px;border-radius:10px;color:#fff;cursor:pointer;text-align:left;display:flex;gap:10px;align-items:center}
+  .nav button.active{background:linear-gradient(135deg,var(--accent2),var(--accent));box-shadow:0 6px 30px rgba(255,0,0,0.12)}
+  .nav .small{opacity:0.85;font-size:13px;color:rgba(255,255,255,0.9)}
+  .footer-note{font-size:12px;color:rgba(255,255,255,0.5);margin-top:auto;text-align:center;padding-top:6px}
 
-/* nav */
-.nav{width:100%;display:flex;flex-direction:column;gap:8px;margin-top:8px}
-.nav .btn{padding:12px 14px;border-radius:10px;background:rgba(20,0,0,0.5);border:1px solid rgba(255,0,0,0.06);text-align:center;cursor:pointer;color:#fff}
-.nav .btn.active{background:linear-gradient(135deg,var(--accent2),rgba(255,0,0,0.18));box-shadow:0 6px 18px rgba(255,0,0,0.08);border-left:4px solid var(--accent)}
+  /* Main */
+  #main{flex:1;display:flex;flex-direction:column;gap:18px}
+  .topbar{display:flex;align-items:center;gap:12px;padding:12px;border-radius:12px;background:var(--glass);border:1px solid rgba(255,0,0,0.04)}
+  .title{font-family:'Audiowide',sans-serif;font-size:22px;color:var(--accent);margin-right:auto}
+  .controls{display:flex;gap:8px;align-items:center}
+  input.search{padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:rgba(0,0,0,0.6);color:#fff;min-width:220px}
+  .btn{padding:8px 12px;border-radius:10px;border:none;background:linear-gradient(90deg,var(--accent2),var(--accent));cursor:pointer;color:#fff;font-weight:600}
+  .small-btn{padding:8px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:#fff;cursor:pointer}
 
-/* main */
-.main{flex:1;padding:26px;overflow:hidden;display:flex;flex-direction:column;gap:18px}
-.header{display:flex;align-items:center;justify-content:space-between}
-.title{font-family:'Audiowide',sans-serif;font-size:26px;color:var(--accent)}
-.controls{display:flex;gap:8px;align-items:center}
+  /* content panel */
+  .panel{flex:1;padding:16px;border-radius:12px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,0,0,0.06);overflow:hidden;display:flex;flex-direction:column;min-height:0}
+  .panel-inner{display:flex;flex-direction:column;gap:12px;min-height:0}
 
-/* home quick cards (kept minimal) */
-.quick-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px}
+  /* filters row */
+  .filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .chip{padding:8px 12px;border-radius:12px;background:rgba(0,0,0,0.45);border:1px solid rgba(255,255,255,0.04);cursor:pointer}
+  .chip.active{background:linear-gradient(135deg,var(--accent2),var(--accent));box-shadow:0 8px 30px rgba(255,0,0,0.08)}
 
-/* games area */
-.games-area{flex:1;display:flex;flex-direction:column;gap:12px;min-height:0}
-.filters{display:flex;gap:8px;flex-wrap:wrap}
-.category-btn{padding:8px 14px;border-radius:12px;background:rgba(20,0,0,0.45);border:1px solid rgba(255,0,0,0.06);cursor:pointer;color:#eee}
-.category-btn.active{background:linear-gradient(135deg,var(--accent2),var(--accent));box-shadow:0 6px 18px rgba(255,0,0,0.06);color:white}
+  /* grid */
+  .games-wrap{flex:1;display:flex;min-height:0}
+  .games-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:18px;padding:12px;overflow:auto;padding-bottom:24px}
+  .game-card{background:linear-gradient(180deg,rgba(20,0,0,0.45),rgba(40,0,0,0.25));border-radius:14px;border:1px solid rgba(255,0,0,0.06);padding:12px;display:flex;flex-direction:column;gap:8px;cursor:pointer;position:relative}
+  .game-card img{width:100%;height:140px;object-fit:cover;border-radius:10px;background:#111}
+  .game-card h3{margin:0;font-size:16px;color:var(--accent-light)}
+  .game-card .meta{display:flex;justify-content:space-between;align-items:center;margin-top:auto}
+  .play-btn{padding:8px 10px;border-radius:10px;border:none;background:var(--accent);color:#111;font-weight:700;cursor:pointer}
+  .fav{position:absolute;right:12px;top:12px;width:36px;height:36px;border-radius:9px;background:rgba(0,0,0,0.45);display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.04);cursor:pointer}
+  .fav.active{background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 6px 18px rgba(255,0,0,0.12)}
 
-/* grid */
-.games-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px;padding:8px;overflow:auto;min-height:0}
-.game-card{background:linear-gradient(135deg,rgba(26,0,0,0.6),rgba(61,0,0,0.4));border:1px solid rgba(255,0,0,0.06);border-radius:14px;padding:12px;cursor:pointer;display:flex;flex-direction:column;gap:10px}
-.game-card img{width:100%;height:140px;object-fit:cover;border-radius:10px;border:2px solid rgba(255,0,0,0.06)}
-.game-card h3{margin:0;font-size:16px;color:var(--accent-light)}
+  /* iframe area */
+  .embed-area{display:none;flex-direction:column;gap:10px;min-height:0}
+  .embed-area.active{display:flex}
+  .embed-frame{flex:1;border-radius:10px;overflow:hidden;border:2px solid var(--accent2)}
+  .embed-frame iframe{width:100%;height:100%;border:0;background:#000}
 
-/* embed */
-.embed-wrap{display:none;flex-direction:column;gap:12px}
-.embed-wrap.active{display:flex}
-.embed-frame{height:calc(100vh - 220px);width:100%;border-radius:10px;border:2px solid var(--accent2);overflow:hidden}
-.embed-frame iframe{width:100%;height:100%;border:0;background:#000}
+  /* empty state */
+  .empty{padding:30px;text-align:center;color:rgba(255,255,255,0.6)}
 
-/* utilities */
-.note{color:rgba(255,255,255,0.7);font-size:13px}
-.footer{font-size:13px;color:rgba(255,255,255,0.6);display:flex;justify-content:space-between;align-items:center}
-
-/* small screens */
-@media (max-width:900px){.sidebar{display:none}.games-grid{grid-template-columns:repeat(2,1fr)}}
+  @media (max-width:900px){
+    .app{flex-direction:column;padding:12px}
+    #sidebar{width:100%;display:flex;flex-direction:row;overflow:auto;padding:12px;gap:10px}
+    .logo{display:none}
+    .games-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}
+  }
 </style>
 </head>
 <body>
-<div class="app">
-
-  <aside class="sidebar">
-    <div class="logo-wrap">
-      <div class="logo-icon"><img id="logoImg" src="logonobg.png" alt="Vixel"></div>
-      <div class="brand">VIXEL</div>
-    </div>
-
-    <nav class="nav" role="navigation">
-      <div class="btn active" data-page="home" onclick="navTo('home', this)">Home</div>
-      <div class="btn" data-page="games" onclick="navTo('games', this)">Games</div>
-      <div class="btn" data-page="ai" onclick="navTo('ai', this)">AI</div>
-      <div class="btn" data-page="chat" onclick="navTo('chat', this)">Chat</div>
-      <div class="btn" data-page="proxy" onclick="navTo('proxy', this)">Pøx-y</div>
-      <div class="btn" onclick="openSite()">Site</div>
-    </nav>
-
-    <div style="margin-top:auto;font-size:12px;color:rgba(255,255,255,0.6);text-align:center">
-      built for VIXEL — <span id="status">loading...</span>
-    </div>
-  </aside>
-
-  <main class="main">
-    <div class="header">
-      <div class="title">Vixel Hub</div>
-      <div class="controls">
-        <div class="note" id="gamesCount"></div>
+  <div class="app">
+    <aside id="sidebar">
+      <div class="logo">
+        <div class="logo-icon"><img src="logonobg.png" alt="VIXEL logo"></div>
+        <div style="font-size:16px">VIXEL</div>
       </div>
-    </div>
 
-    <!-- Pages -->
-    <div id="page-home" class="page active">
-      <div class="quick-grid">
-        <div style="background:var(--glass);padding:18px;border-radius:12px">
-          <h3 style="margin:0;color:var(--accent)">Welcome</h3>
-          <p class="note">Play games inline, use AI, chat, and Pøx-y. Click Games to load the full list.</p>
-        </div>
-        <div style="background:var(--glass);padding:18px;border-radius:12px">
-          <h3 style="margin:0;color:var(--accent)">Tip</h3>
-          <p class="note">If some games 404, the script will try to auto-fix relative links to PeteZah's domain.</p>
+      <nav class="nav">
+        <button id="nav-home" class="active" onclick="showTab('home', this)">🏠 <span class="small">Home</span></button>
+        <button id="nav-games" onclick="showTab('games', this)">🎮 <span class="small">Games</span></button>
+        <button id="nav-ai" onclick="showTabExternal('https://andreyzhorik.github.io/vixel-ai/', this)">🤖 <span class="small">AI</span></button>
+        <button id="nav-chat" onclick="showTabExternal('https://andreyzhorik.github.io/vixel-chat/', this)">💬 <span class="small">Chat</span></button>
+        <button id="nav-proxy" onclick="showTab('proxy', this)">🕶️ <span class="small">Pøx-y</span></button>
+        <button id="nav-site" onclick="openSite()">🌐 <span class="small">Site</span></button>
+      </nav>
+
+      <div class="footer-note">Built for Vixel • Theme: #000000 / #3D0000 / #950101 / #FF0000</div>
+    </aside>
+
+    <main id="main">
+      <div class="topbar">
+        <div class="title">VIXEL HUB</div>
+        <div class="controls">
+          <input id="searchInput" class="search" placeholder="search games..." oninput="onSearch()" />
+          <button id="btn-favs" class="small-btn" title="Show favorites" onclick="toggleFavoritesView()">★ Favorites</button>
+          <button class="btn" onclick="reloadGames()">Reload</button>
         </div>
       </div>
-    </div>
 
-    <div id="page-games" class="page" style="display:none">
-      <div class="games-area">
-        <div class="filters" id="filters"></div>
-        <div class="games-grid" id="gamesGrid" role="list"></div>
+      <div class="panel">
+        <div class="panel-inner" id="panelInner">
+          <!-- HOME -->
+          <div id="page-home" class="page active">
+            <h2 style="font-family:Audiowide, sans-serif;color:var(--accent);margin:0 0 8px 0">Welcome</h2>
+            <p style="margin:0 0 12px 0;color:var(--muted)">Pick Games / AI / Chat / Pøx-y from the sidebar. Games load from your games.json and PeteZah fallback. Use search and favorites.</p>
+            <div style="display:flex;gap:12px;flex-wrap:wrap">
+              <button class="btn" onclick="showTab('games', document.getElementById('nav-games'))">Play Games</button>
+              <button class="btn" onclick="showTab('proxy', document.getElementById('nav-proxy'))">Open Pøx-y</button>
+            </div>
+          </div>
 
-        <div class="embed-wrap" id="embedWrap">
-          <button class="btn" onclick="backToGrid()" style="background:linear-gradient(90deg,var(--accent2),var(--accent));border:none;padding:10px 14px;border-radius:10px">← Back</button>
-          <div class="embed-frame" id="embedFrame"><iframe id="gameIframe" src="" frameborder="0" allowfullscreen></iframe></div>
+          <!-- GAMES -->
+          <div id="page-games" class="page" style="display:none;flex-direction:column;min-height:0">
+            <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+              <div class="filters" id="filtersRow"></div>
+            </div>
+
+            <div class="games-wrap" style="flex:1;min-height:0">
+              <div id="gamesGrid" class="games-grid"></div>
+
+              <div id="embedArea" class="embed-area" style="flex:1;min-height:0">
+                <div style="display:flex;gap:10px;align-items:center">
+                  <button class="back-button" onclick="closeEmbed()">← Back</button>
+                  <div id="embedTitle" style="font-weight:700;"></div>
+                </div>
+                <div class="embed-frame" style="flex:1">
+                  <iframe id="embedFrame" sandbox="allow-scripts allow-forms allow-same-origin allow-popups"></iframe>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PROXY -->
+          <div id="page-proxy" class="page" style="display:none;">
+            <h2 style="color:var(--accent)">Pøx-y</h2>
+            <p style="color:var(--muted)">Opening GRIP inside iframe.</p>
+            <div class="embed-frame" style="height:70vh"><iframe src="https://andreyzhorik.github.io/GRIP/" sandbox="allow-scripts allow-forms allow-same-origin allow-popups"></iframe></div>
+          </div>
+
+          <!-- AI and chat are opened in iframe in new tab so we don't fight CSP -->
         </div>
       </div>
-    </div>
-
-    <div id="page-ai" class="page" style="display:none">
-      <div style="background:var(--glass);padding:18px;border-radius:12px">
-        <h3 style="color:var(--accent)">AI</h3>
-        <p class="note">AI page embedded below.</p>
-        <div style="height:520px;border-radius:10px;overflow:hidden;border:2px solid var(--accent2)"><iframe src="https://andreyzhorik.github.io/vixel-ai/" style="width:100%;height:100%;border:0"></iframe></div>
-      </div>
-    </div>
-
-    <div id="page-chat" class="page" style="display:none">
-      <div style="background:var(--glass);padding:18px;border-radius:12px">
-        <h3 style="color:var(--accent)">Chat</h3>
-        <div style="height:520px;border-radius:10px;overflow:hidden;border:2px solid var(--accent2)"><iframe src="https://andreyzhorik.github.io/vixel-chat/" style="width:100%;height:100%;border:0"></iframe></div>
-      </div>
-    </div>
-
-    <div id="page-proxy" class="page" style="display:none">
-      <div style="background:var(--glass);padding:18px;border-radius:12px">
-        <h3 style="color:var(--accent)">Pøx-y</h3>
-        <div style="height:520px;border-radius:10px;overflow:hidden;border:2px solid var(--accent2)"><iframe src="https://andreyzhorik.github.io/GRIP/" style="width:100%;height:100%;border:0"></iframe></div>
-      </div>
-    </div>
-
-    <div class="footer">
-      <div class="note">Made with 🔥</div>
-      <div class="note" id="debug"></div>
-    </div>
-  </main>
-</div>
+    </main>
+  </div>
 
 <script>
-/*
-  Vixel hub games loader:
-  - Attempts to fetch your repo games.json (raw).
-  - Falls back to PeteZah's games JSON.
-  - If both fail, uses a tiny embedded sample.
-  - Fixes relative URLs ("/...") to point at https://petezahgames.com
-*/
+/* -------------------------
+   Config & helpers
+   ------------------------- */
+const RAW_USER_JSON = 'https://raw.githubusercontent.com/andreyzhorik/VIXEL/main/games.json';
+const PETEZAH_RAW_JSON = 'https://raw.githubusercontent.com/PeteZah-Games/PeteZahGames/main/public/storage/data/games.json';
+const PETEZAH_DOMAIN = 'https://petezahgames.com';
+const FALLBACK_IMG = 'https://petezahgames.com/storage/images/main/default.jpg';
 
-// Raw URLs we'll try (order matters)
-const RAW_YOUR_JSON = "https://raw.githubusercontent.com/andreyzhorik/VIXEL/main/games.json";
-const RAW_PETEZAH_JSON = "https://raw.githubusercontent.com/PeteZah-Games/PeteZahGames/main/public/storage/data/games.json";
+let allGames = [];      // flattened array of games
+let visibleGames = [];  // filtered by search / category / favs
+let categories = new Set();
+let favorites = loadFavorites(); // Set of labels or unique ids
+let showingFavoritesOnly = false;
 
-let allGames = [];
-let categoriesSet = new Set();
-const statusEl = document.getElementById("status");
-const debugEl = document.getElementById("debug");
-const gamesCountEl = document.getElementById("gamesCount");
+/* safe url fixer: converts relative /something -> petezah absolute */
+function fixUrl(u){
+  if(!u) return '';
+  // already absolute
+  if(u.startsWith('http://') || u.startsWith('https://')) return u;
+  // many entries are like "/iframe.html?url=/storage/..." or "/storage/images/..."
+  if(u.startsWith('/')) return PETEZAH_DOMAIN + u;
+  return u;
+}
 
-// small fallback data (keeps UI usable)
-const FALLBACK = {
-  games: [
-    { label: "Fallback-1", imageUrl: "https://petezahgames.com/storage/images/main/default.jpg", url: "/iframe.html?url=/storage/ag/g/tag", categories: ["action"] },
-    { label: "Fallback-2", imageUrl: "https://petezahgames.com/storage/images/main/default.jpg", url: "/iframe.html?url=/storage/ag/g/polytrack/", categories: ["racing"] }
-  ]
-};
-
-function fixUrl(url){
-  if(!url) return "";
+/* load favorites from localStorage */
+function loadFavorites(){
   try{
-    // if absolute already, return untouched
-    const u = new URL(url, "https://example.invalid");
-    if(u.protocol === "http:" || u.protocol === "https:"){
-      // if original url had scheme, return original (handles full urls)
-      if(url.startsWith("http://") || url.startsWith("https://")) return url;
-    }
+    const raw = localStorage.getItem('vixel_favs');
+    if(!raw) return new Set();
+    const arr = JSON.parse(raw);
+    return new Set(Array.isArray(arr) ? arr : []);
+  }catch(e){return new Set();}
+}
+function saveFavorites(){
+  localStorage.setItem('vixel_favs', JSON.stringify(Array.from(favorites)));
+}
+function toggleFavorite(id){
+  if(favorites.has(id)) favorites.delete(id); else favorites.add(id);
+  saveFavorites();
+  renderGamesGrid();
+}
+
+/* -------------------------
+   UI navigation
+   ------------------------- */
+function clearActiveNav(){
+  document.querySelectorAll('#sidebar .nav button').forEach(b => b.classList.remove('active'));
+}
+function showTab(tab, btnEl){
+  clearActiveNav();
+  if(btnEl) btnEl.classList.add('active');
+
+  document.querySelectorAll('.page').forEach(p => p.style.display='none');
+  if(tab === 'home'){ document.getElementById('page-home').style.display = 'block'; }
+  else if(tab === 'games'){ document.getElementById('page-games').style.display = 'flex'; ensureGamesLoaded(); }
+  else if(tab === 'proxy'){ document.getElementById('page-proxy').style.display = 'block'; }
+  window.scrollTo(0,0);
+}
+function showTabExternal(url, btnEl){
+  // keep the nav active but open external in same tab? user wanted not new tab for ai/chat earlier.
+  // But many external sites have CSP that blocks iframes. we'll open in new tab to be safe.
+  if(btnEl){ clearActiveNav(); btnEl.classList.add('active'); }
+  window.open(url, '_blank', 'noopener');
+}
+function openSite(){ window.open('https://sites.google.com/view/vixelhub', '_blank', 'noopener'); }
+
+/* -------------------------
+   Fetching + normalizing JSON
+   ------------------------- */
+async function fetchJson(url){
+  const res = await fetch(url);
+  if(!res.ok) throw new Error('fetch failed ' + res.status);
+  return res.json();
+}
+
+async function loadAndNormalizeGames(){
+  // try user JSON first, then PeteZah fallback (merge)
+  let userData = null;
+  try{
+    userData = await fetchJson(RAW_USER_JSON);
   }catch(e){
-    // fall through
+    console.warn('user JSON failed', e);
   }
-  // If starts with '/', assume PeteZah origin (their assets + iframe path)
-  if(url.startsWith("/")) return "https://petezahgames.com" + url;
-  // If it's a relative path that begins with 'storage' or similar, prefix with PeteZah too
-  if(!url.startsWith("http") && (url.startsWith("storage") || url.startsWith("pages") || url.startsWith("iframe.html"))) {
-    return "https://petezahgames.com/" + url.replace(/^\/+/, "");
-  }
-  // otherwise return as-is
-  return url;
-}
 
-async function tryFetch(url){
+  let peteData = null;
   try{
-    const res = await fetch(url, {cache: "no-cache"});
-    if(!res.ok) throw new Error("HTTP " + res.status);
-    const json = await res.json();
-    return json;
-  }catch(err){
-    console.warn("fetch failed", url, err);
-    debugEl.textContent = `fetch fail ${url} — ${err}`;
-    return null;
-  }
-}
-
-async function loadJSONAndInit(){
-  statusEl.textContent = "loading JSON...";
-  let data = await tryFetch(RAW_YOUR_JSON);
-  if(!data){
-    statusEl.textContent = "fallback: trying PeteZah JSON...";
-    data = await tryFetch(RAW_PETEZAH_JSON);
-  }
-  if(!data){
-    statusEl.textContent = "using embedded fallback";
-    data = FALLBACK;
-  } else {
-    statusEl.textContent = "games loaded";
+    peteData = await fetchJson(PETEZAH_RAW_JSON);
+  }catch(e){
+    console.warn('petezah JSON failed', e);
   }
 
-  // support both shapes: root array OR { games: [...] }
-  if(Array.isArray(data)) {
-    allGames = data;
-  } else if(data.games && Array.isArray(data.games)) {
-    allGames = data.games;
-  } else {
-    // try to find array property
-    const arr = Object.values(data).find(v => Array.isArray(v));
-    allGames = arr || FALLBACK.games;
-  }
+  // userData may be {games: [...] } or array
+  const userArray = normalizeJsonToArray(userData);
+  const peteArray = normalizeJsonToArray(peteData);
 
-  // normalize & collect categories
-  categoriesSet.clear();
-  allGames = allGames.map(g => {
-    const safe = {
-      label: g.label || g.title || "Untitled",
-      imageUrl: g.imageUrl || g.image || g.img || "",
-      url: g.url || g.embed || g.link || "",
-      categories: g.categories || g.tags || []
-    };
-    // fix relative urls
-    safe.imageUrl = fixUrl(safe.imageUrl);
-    safe.url = fixUrl(safe.url);
-    // ensure categories lowercased canonical for UI
-    safe.categories = (safe.categories||[]).map(c=>String(c).toLowerCase());
-    safe.categories.forEach(c => categoriesSet.add(c));
-    return safe;
+  // merge: user first, petezah appended (avoid duplicates by label+url)
+  const merged = [];
+  const seen = new Set();
+  function pushUnique(g){
+    const key = (g.label||'').trim() + '|' + (g.url||'').trim();
+    if(seen.has(key)) return;
+    seen.add(key);
+    merged.push(normalizeGame(g));
+  }
+  userArray.forEach(pushUnique);
+  peteArray.forEach(pushUnique);
+
+  // build categories set
+  categories = new Set();
+  merged.forEach(g => {
+    (g.categories || []).forEach(c => categories.add(normalizeCategory(c)));
   });
 
-  // Add 'all' and nice sorted categories
-  const categories = Array.from(categoriesSet).filter(Boolean).sort();
-  renderCategoryFilters(categories);
-  renderGamesGrid(allGames);
-  gamesCountEl.textContent = `${allGames.length} games`;
-  statusEl.textContent = "ready";
+  allGames = merged;
+  visibleGames = allGames.slice();
 }
 
-// UI rendering
-function renderCategoryFilters(categories){
-  const filters = document.getElementById("filters");
-  filters.innerHTML = '';
-  // All button
-  const allBtn = createCategoryBtn('all','All', true);
-  filters.appendChild(allBtn);
-  // dynamic categories
-  categories.forEach(cat => {
-    const label = cat.replace(/-/g,' ');
-    filters.appendChild(createCategoryBtn(cat, label, false));
-  });
+/* normalizers */
+function normalizeJsonToArray(data){
+  if(!data) return [];
+  if(Array.isArray(data)) return data;
+  if(typeof data === 'object'){
+    if(Array.isArray(data.games)) return data.games;
+    if(Array.isArray(data.items)) return data.items;
+    // maybe nested under public or data
+    for(const k of ['data','games_list','list']) if(Array.isArray(data[k])) return data[k];
+  }
+  return [];
 }
-
-function createCategoryBtn(catKey, display, active){
-  const btn = document.createElement('button');
-  btn.className = 'category-btn' + (active ? ' active' : '');
-  btn.textContent = display;
-  btn.onclick = () => {
-    document.querySelectorAll('.category-btn').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    filterByCategory(catKey);
+function normalizeCategory(c){ return (c||'').toLowerCase().trim(); }
+function normalizeGame(g){
+  // make sure fields exist and fix relative urls
+  return {
+    label: g.label || g.title || g.name || 'Untitled',
+    url: fixUrl(g.url || g.embed || g.link || ''),
+    imageUrl: fixUrl(g.imageUrl || g.image || g.thumbnail || g.thumb || ''),
+    categories: (g.categories || g.tags || []).map(x=>normalizeCategory(x)),
+    raw: g
   };
-  return btn;
 }
 
-function filterByCategory(cat){
-  const key = String(cat).toLowerCase();
-  if(key === 'all') {
-    renderGamesGrid(allGames);
-    return;
-  }
-  const filtered = allGames.filter(g => (g.categories||[]).some(c => c === key || c.replace(/\s+/g,'') === key.replace(/\s+/g,'')));
-  renderGamesGrid(filtered);
+/* -------------------------
+   Render UI: filters + grid
+   ------------------------- */
+function buildFilters(){
+  const row = document.getElementById('filtersRow');
+  row.innerHTML = '';
+
+  // categories chips
+  const cats = ['all', ...Array.from(categories).slice(0,80)]; // limit safety
+  cats.forEach(cat => {
+    const btn = document.createElement('div');
+    btn.className = 'chip' + (cat === 'all' ? ' active' : '');
+    btn.textContent = cat === 'all' ? 'All' : capitalize(cat);
+    btn.onclick = () => { document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active')); btn.classList.add('active'); applyFilters(); };
+    row.appendChild(btn);
+  });
+
+  // search is already in topbar; add favorites toggle indicator
+  const favChip = document.createElement('div');
+  favChip.className = 'chip';
+  favChip.innerHTML = '★ Favorites';
+  favChip.onclick = () => { toggleFavoritesView(); };
+  row.appendChild(favChip);
 }
 
-// render grid
-function renderGamesGrid(list){
-  const grid = document.getElementById("gamesGrid");
-  document.getElementById("embedWrap").classList.remove('active');
-  grid.innerHTML = '';
-  if(!list.length){
-    grid.innerHTML = `<div class="note">No games found.</div>`;
+/* render games grid from visibleGames */
+function renderGamesGrid(){
+  const container = document.getElementById('gamesGrid');
+  container.innerHTML = '';
+  if(visibleGames.length === 0){
+    container.innerHTML = '<div class="empty">No games found.</div>';
     return;
   }
-  list.forEach(g => {
+
+  visibleGames.forEach(g => {
     const card = document.createElement('div');
     card.className = 'game-card';
+    // image
     const img = document.createElement('img');
-    img.src = g.imageUrl || 'https://petezahgames.com/storage/images/main/default.jpg';
-    img.alt = g.label;
-    img.onerror = () => { img.src = 'https://petezahgames.com/storage/images/main/default.jpg'; };
-    const h3 = document.createElement('h3');
-    h3.textContent = g.label;
+    img.src = g.imageUrl || FALLBACK_IMG;
+    img.onerror = () => { img.src = FALLBACK_IMG; }
     card.appendChild(img);
-    card.appendChild(h3);
-    card.onclick = () => openGameInEmbed(g);
-    grid.appendChild(card);
+
+    // fav button
+    const favBtn = document.createElement('div');
+    favBtn.className = 'fav' + (favorites.has(g.label) ? ' active' : '');
+    favBtn.title = 'Toggle favorite';
+    favBtn.innerHTML = favorites.has(g.label) ? '❤' : '♡';
+    favBtn.onclick = (e) => { e.stopPropagation(); toggleFavorite(g.label); favBtn.classList.toggle('active'); favBtn.innerHTML = favorites.has(g.label) ? '❤' : '♡'; }
+    card.appendChild(favBtn);
+
+    // title
+    const title = document.createElement('h3');
+    title.textContent = g.label;
+    card.appendChild(title);
+
+    // meta/play
+    const meta = document.createElement('div');
+    meta.className = 'meta';
+    const cat = document.createElement('div');
+    cat.style.opacity = 0.8; cat.style.fontSize = '12px';
+    cat.textContent = (g.categories && g.categories.length) ? g.categories.slice(0,2).map(capitalize).join(', ') : '';
+    meta.appendChild(cat);
+
+    const play = document.createElement('button');
+    play.className = 'play-btn';
+    play.textContent = 'Play';
+    play.onclick = (e)=>{ e.stopPropagation(); openEmbed(g); };
+    meta.appendChild(play);
+
+    card.appendChild(meta);
+
+    // click opens embed too
+    card.onclick = ()=>openEmbed(g);
+
+    container.appendChild(card);
   });
 }
 
-function openGameInEmbed(game){
-  // Some PeteZah game urls are like /iframe.html?url=/storage/...
-  // We already fixed to full URL. Some embed pages disallow framing; that's outside our control.
-  const iframe = document.getElementById('gameIframe');
-  document.getElementById('gamesGrid').scrollTop = 0;
-  document.getElementById('embedWrap').classList.add('active');
-  iframe.src = game.url || '';
-  // show debug if iframe 404 or blocked - cannot access cross-origin, but user will see message in console
-  debugEl.textContent = `loading ${game.url}`;
+/* -------------------------
+   Filtering logic
+   ------------------------- */
+function applyFilters(){
+  const activeChip = Array.from(document.querySelectorAll('#filtersRow .chip')).find(c=>c.classList.contains('active'));
+  const cat = (activeChip && activeChip.textContent.toLowerCase() !== 'all') ? activeChip.textContent.toLowerCase() : null;
+  const q = document.getElementById('searchInput').value.trim().toLowerCase();
+
+  visibleGames = allGames.filter(g=>{
+    if(showingFavoritesOnly && !favorites.has(g.label)) return false;
+    if(cat && cat !== 'all'){
+      // match categories
+      if(!g.categories || !g.categories.some(c=>c === cat)) return false;
+    }
+    if(q){
+      if((g.label || '').toLowerCase().indexOf(q) === -1) return false;
+      // optionally search categories or other fields
+    }
+    return true;
+  });
+
+  renderGamesGrid();
+}
+function onSearch(){ applyFilters(); }
+function capitalize(s){ if(!s) return ''; return s[0].toUpperCase()+s.slice(1); }
+
+/* -------------------------
+   Embedding and playing
+   ------------------------- */
+function openEmbed(g){
+  // show embed area
+  document.getElementById('embedArea').classList.add('active');
+  document.getElementById('gamesGrid').style.display = 'none';
+  document.getElementById('embedTitle').textContent = g.label;
+
+  // convert relative iframe urls
+  let src = g.url || '';
+  if(!src) { alert('No URL available for this game'); return; }
+
+  // if src looks like "/iframe.html?url=/pages/..." it'll be converted already by fixUrl.
+  // Set iframe src:
+  const frame = document.getElementById('embedFrame');
+  frame.src = src;
+  // if the embed page doesn't allow framing (CSP), user will see blank / error in iframe.
+}
+function closeEmbed(){
+  document.getElementById('embedArea').classList.remove('active');
+  document.getElementById('gamesGrid').style.display = '';
+  document.getElementById('embedFrame').src = '';
 }
 
-function backToGrid(){
-  const iframe = document.getElementById('gameIframe');
-  iframe.src = '';
-  document.getElementById('embedWrap').classList.remove('active');
+/* -------------------------
+   favorites view toggle
+   ------------------------- */
+function toggleFavoritesView(){
+  showingFavoritesOnly = !showingFavoritesOnly;
+  document.getElementById('btn-favs').style.opacity = showingFavoritesOnly ? '1' : '0.8';
+  applyFilters();
 }
 
-// nav actions
-function navTo(page, el){
-  document.querySelectorAll('.nav .btn').forEach(b=>b.classList.remove('active'));
-  if(el) el.classList.add('active');
-  document.querySelectorAll('.page').forEach(p=>p.style.display='none');
-  const pg = document.getElementById('page-'+page);
-  if(pg) pg.style.display = 'block';
-  // if switching to games and not yet loaded, ensure loaded
-  if(page === 'games') {
-    // nothing special: data loaded at startup
+/* -------------------------
+   load/reload control
+   ------------------------- */
+let gamesLoaded = false;
+async function ensureGamesLoaded(){
+  if(gamesLoaded) return;
+  gamesLoaded = true;
+  await reloadGames();
+}
+async function reloadGames(){
+  try{
+    // load and normalize both sources
+    await loadAndNormalizeGames();
+    buildFilters();
+    applyFilters();
+    // default: show games tab
+    showTab('games', document.getElementById('nav-games'));
+  }catch(e){
+    console.error('reload failed', e);
+    const grid = document.getElementById('gamesGrid');
+    grid.innerHTML = '<div class="empty">Failed to load games. Open console for details.</div>';
   }
 }
-function openSite(){ window.open('https://sites.google.com/view/vixelhub','_blank','noopener'); }
 
-// initialize
-document.addEventListener('DOMContentLoaded', () => {
-  loadJSONAndInit();
-  // set initial page home
-  navTo('home', document.querySelector('.nav .btn[data-page="home"]'));
+/* -------------------------
+   boot
+   ------------------------- */
+document.addEventListener('DOMContentLoaded', async ()=>{
+  // show home initially
+  showTab('home', document.getElementById('nav-home'));
+  // preload games in background
+  await ensureGamesLoaded();
 });
+
 </script>
 </body>
 </html>

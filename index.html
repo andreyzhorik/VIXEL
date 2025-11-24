@@ -638,7 +638,7 @@ let allGames = [];
 let currentCategory = 'all';
 
 // LOAD GAMES FROM GITHUB JSON
-fetch("https://andreyzhorik.github.io/VIXEL/games.json")
+fetch("https://raw.githubusercontent.com/andreyzhorik/VIXEL/main/games.json")
   .then(res => res.json())
   .then(data => {
     allGames = data;

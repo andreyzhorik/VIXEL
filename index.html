@@ -5,11 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Vixel Hub</title>
 
+  <!-- Audiowide Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet">
+
   <style>
     :root {
       --bg1: #000000;
       --bg2: #3D0000;
-      --panel: #1a0000;
+      --panel: #150000;
       --accent: #FF0000;
       --accent2: #950101;
     }
@@ -26,41 +29,44 @@
 
     /* SIDEBAR */
     .sidebar {
-      width: 220px;
+      width: 230px;
       background: #000000cc;
       backdrop-filter: blur(6px);
       display: flex;
       flex-direction: column;
-      padding: 20px;
+      padding: 22px;
       border-right: 2px solid var(--accent);
-      box-shadow: 4px 0 20px #ff000022;
+      box-shadow: 4px 0 20px #ff000044;
     }
 
-    .sidebar h1 {
-      margin: 0 0 20px 0;
-      font-size: 24px;
+    .logo {
+      font-family: 'Audiowide', sans-serif;
+      font-size: 32px;
       text-align: center;
       color: var(--accent);
+      margin-bottom: 25px;
     }
 
     .nav-item {
-      padding: 12px;
-      margin-bottom: 10px;
+      padding: 13px;
+      margin-bottom: 12px;
       background: #1a0000;
       border-radius: 10px;
       cursor: pointer;
       text-align: center;
       transition: 0.2s;
       border: 1px solid #3D0000;
+      user-select: none;
     }
 
     .nav-item:hover,
     .nav-item.active {
       background: var(--accent2);
       border-color: var(--accent);
+      box-shadow: 0 0 10px #ff000066;
     }
 
-    /* MAIN CONTENT */
+    /* MAIN PANEL */
     .main-container {
       flex: 1;
       padding: 30px;
@@ -80,7 +86,7 @@
 
     .page {
       display: none;
-      animation: fade 0.3s;
+      animation: fade 0.25s;
     }
 
     .page.active {
@@ -107,7 +113,7 @@
     .games-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 20px;
+      gap: 22px;
       padding-right: 10px;
     }
 
@@ -120,6 +126,7 @@
       transition: 0.2s;
       display: flex;
       flex-direction: column;
+      cursor: pointer;
     }
 
     .game-card:hover {
@@ -145,19 +152,20 @@
 
   <!-- SIDEBAR -->
   <div class="sidebar">
-    <h1>Vixel</h1>
-    <div class="nav-item active" onclick="loadPage('home')">Home</div>
-    <div class="nav-item" onclick="loadPage('games')">Games</div>
-    <div class="nav-item" onclick="window.open('https://andreyzhorik.github.io/vixel-ai/', '_blank')">AI</div>
-    <div class="nav-item" onclick="window.open('https://andreyzhorik.github.io/vixel-chat/', '_blank')">Chat</div>
-    <div class="nav-item" onclick="window.open('https://andreyzhorik.github.io/GRIP/', '_blank')">Pøx-y</div>
-    <div class="nav-item" onclick="window.open('https://sites.google.com/view/vixelhub', '_blank')">Site</div>
+    <div class="logo">VIXEL</div>
+
+    <div class="nav-item active" onclick="loadPage('home', this)">Home</div>
+    <div class="nav-item" onclick="loadPage('games', this)">Games</div>
+    <div class="nav-item" onclick="loadPage('ai', this)">AI</div>
+    <div class="nav-item" onclick="loadPage('chat', this)">Chat</div>
+    <div class="nav-item" onclick="loadPage('proxy', this)">Pøx-y</div>
+    <div class="nav-item" onclick="loadPage('site', this)">Site</div>
   </div>
 
-  <!-- MAIN -->
+  <!-- MAIN CONTENT -->
   <div class="main-container">
 
-    <!-- HOME PAGE -->
+    <!-- HOME -->
     <div id="page-home" class="page active">
       <div class="home-box">
         <h2>Welcome to Vixel Hub</h2>
@@ -165,107 +173,54 @@
       </div>
     </div>
 
-    <!-- GAMES PAGE -->
+    <!-- GAMES -->
     <div id="page-games" class="page">
       <h2 style="color: var(--accent); margin-bottom: 20px;">Games</h2>
-
-      <div class="games-grid" id="games-container">
-        <!-- JS will insert game cards here -->
-      </div>
+      <div class="games-grid" id="games-container"></div>
     </div>
 
   </div>
-  
+
+  <!-- JS -->
   <script>
-    // helper to find sidebar item element by data-url
-    function findSidebarItem(name){return document.querySelector('.item[data-url="'+name+'"]')}
+    function loadPage(page, element) {
+      // switch active tab
+      document.querySelectorAll(".nav-item").forEach(i => i.classList.remove("active"));
+      element.classList.add("active");
 
-    function setActive(el){document.querySelectorAll('#sidebar .item').forEach(i=>i.classList.remove('active')); if(el) el.classList.add('active')}
+      // hide all pages
+      document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
 
-    // main navigation handler
-    function loadPage(url, el){
-      // make the clicked item active
-      setActive(el || findSidebarItem(url));
-      // update title
-      const titleEl = document.getElementById('pageTitle');
-
-      // hide all specialized views
-      document.getElementById('homeView').style.display = 'none';
-      document.getElementById('gamesView').style.display = 'none';
-      const frame = document.getElementById('frame');
-
-      if(url === 'home'){
-        titleEl.textContent = 'Home';
-        document.getElementById('homeView').style.display = 'block';
-        frame.style.display = 'none';
-      } else if(url === 'games'){
-        titleEl.textContent = 'Games';
-        document.getElementById('gamesView').style.display = 'flex';
-        frame.style.display = 'none';
-        loadGames();
-      } else if(url === 'poxy'){
-        titleEl.textContent = 'Pøx-y';
-        document.getElementById('gamesView').style.display = 'none';
-        document.getElementById('homeView').style.display = 'none';
-        frame.style.display = 'block';
-        // GRIP project as requested
-        frame.src = 'https://andreyzhorik.github.io/GRIP/';
-      } else {
-        // external urls (ai, chat, site open in iframe)
-        titleEl.textContent = (url === 'https://andreyzhorik.github.io/vixel-ai/' ? 'AI' : (url === 'https://andreyzhorik.github.io/vixel-chat/' ? 'Chat' : url));
-        document.getElementById('gamesView').style.display = 'none';
-        document.getElementById('homeView').style.display = 'none';
-        frame.style.display = 'block';
-        frame.src = url;
-      }
+      // open local page OR external pages
+      if (page === "home") document.getElementById("page-home").classList.add("active");
+      else if (page === "games") document.getElementById("page-games").classList.add("active");
+      else if (page === "ai") window.location.href = "https://andreyzhorik.github.io/vixel-ai/";
+      else if (page === "chat") window.location.href = "https://andreyzhorik.github.io/vixel-chat/";
+      else if (page === "proxy") window.location.href = "https://andreyzhorik.github.io/GRIP/";
+      else if (page === "site") window.location.href = "https://sites.google.com/view/vixelhub";
     }
 
-    function openSite(url){
-      // opens google site in new tab per user's wish
-      window.open(url, '_blank', 'noopener');
-      // set active visual on site button
-      setActive(findSidebarItem('site'));
-    }
+    // LOAD GAMES FROM GITHUB JSON
+    fetch("https://andreyzhorik.github.io/VIXEL/games.json")
+      .then(res => res.json())
+      .then(data => {
+        const container = document.getElementById("games-container");
 
-    // Games loader: extracts games from the provided JSON and shows cards
-    let gamesLoaded = false;
-    async function loadGames(){
-      if(gamesLoaded) return;
-      gamesLoaded = true;
-      const listEl = document.getElementById('gamesList');
-      listEl.innerHTML = '<div style="grid-column:1/-1;padding:8px;opacity:0.8">Loading games...</div>';
-      try{
-        const res = await fetch('https://raw.githubusercontent.com/andreyzhorik/VIXEL/main/games.json');
-        if(!res.ok) throw new Error('network');
-        const data = await res.json();
-        // data might be an array or object with items
-        const items = Array.isArray(data) ? data : (data.games || data.items || []);
-        if(!items.length){ listEl.innerHTML = '<div style="grid-column:1/-1;padding:8px;opacity:0.8">No games found in the JSON.</div>'; return }
+        data.forEach(game => {
+          const card = document.createElement("div");
+          card.className = "game-card";
+          card.onclick = () => window.location.href = game.embed;
 
-        listEl.innerHTML = '';
-        items.forEach(g => {
-          const card = document.createElement('div'); card.className='card';
-          const img = document.createElement('img'); img.src = g.image || '';
-          const title = document.createElement('div'); title.textContent = g.title || 'Untitled'; title.style.fontWeight='700'; title.style.fontSize='14px';
-          const desc = document.createElement('div'); desc.textContent = (g.description||'').slice(0,120);
-          const meta = document.createElement('div'); meta.className='meta';
-          const play = document.createElement('button'); play.className='btn'; play.textContent='Play';
-          play.onclick = () => { document.getElementById('gamesView').style.display='none'; document.getElementById('frame').style.display='block'; document.getElementById('frame').src = g.embed || g.url; setActive(findSidebarItem('games')) };
-          meta.appendChild(play);
-          card.appendChild(img); card.appendChild(title); card.appendChild(desc); card.appendChild(meta);
-          listEl.appendChild(card);
-        })
-      }catch(err){
-        console.error(err);
-        document.getElementById('gamesList').innerHTML = '<div style="grid-column:1/-1;padding:8px;opacity:0.8">Failed to load games (CORS or network). You can still open game URLs manually.</div>';
-      }
-    }
+          card.innerHTML = `
+            <img src="${game.image}" />
+            <h3>${game.title}</h3>
+          `;
 
-    // on first load show home
-    window.addEventListener('DOMContentLoaded',()=>{
-      // ensure initial view
-      loadPage('home', findSidebarItem('home'));
-    })
+          container.appendChild(card);
+        });
+      })
+      .catch(err => console.log("Games JSON error:", err));
   </script>
+
 </body>
 </html>

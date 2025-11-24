@@ -1,10 +1,10 @@
+{
+  "games": [
     {
       "label": "1v1.LoL",
       "imageUrl": "https://cdn.jsdelivr.net/gh/gn-math/covers@main/58.png",
       "url": "/iframe.html?url=/pages/other/interpreter/index.html?url=https://cdn.jsdelivr.net/gh/gn-math/html@main/58.html",
-      "categories": [
-        "action"
-      ]
+      "categories": []
     },
     {
       "label": "Tag",
@@ -6805,3 +6805,5 @@
       "imageUrl": "/storage/images/main3/theimpossiblequiz2.png",
       "categories": []
     }
+  ]
+}

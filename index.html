@@ -241,9 +241,44 @@
     font-weight:600;
   }
 
-  /* Filters & apps grid */
+  /* Filters & games/apps grid */
   .filters{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
-  .chip{display:none} /* not used for apps — style kept if needed later */
+  .chip{
+    display:inline-block;
+    padding:8px 16px;
+    border-radius:10px;
+    border:1px solid rgba(255,255,255,0.1);
+    background:rgba(0,0,0,0.3);
+    color:#fff;
+    cursor:pointer;
+    font-size:13px;
+    font-weight:500;
+    transition:all 0.3s ease;
+  }
+  .chip:hover{
+    background:rgba(255,0,0,0.1);
+    border-color:rgba(255,0,0,0.3);
+  }
+  .chip.active{
+    background:linear-gradient(135deg,var(--accent2),var(--accent));
+    border-color:transparent;
+    box-shadow:0 4px 16px rgba(255,0,0,0.3);
+  }
+
+  .games-wrap{flex:1;display:flex;min-height:0}
+  .games-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+    gap:24px;
+    padding:12px;
+    overflow:auto;
+    width:100%;
+  }
+  
+  .games-grid::-webkit-scrollbar{width:8px}
+  .games-grid::-webkit-scrollbar-track{background:rgba(0,0,0,0.2);border-radius:4px}
+  .games-grid::-webkit-scrollbar-thumb{background:rgba(255,0,0,0.3);border-radius:4px}
+  .games-grid::-webkit-scrollbar-thumb:hover{background:rgba(255,0,0,0.5)}
 
   .apps-wrap{flex:1;display:flex;min-height:0}
   .apps-grid{
@@ -260,6 +295,34 @@
   .apps-grid::-webkit-scrollbar-thumb{background:rgba(255,0,0,0.3);border-radius:4px}
   .apps-grid::-webkit-scrollbar-thumb:hover{background:rgba(255,0,0,0.5)}
   
+  .game-card{
+    background:linear-gradient(135deg,rgba(20,0,0,0.6),rgba(40,0,0,0.3));
+    border-radius:16px;
+    border:1px solid rgba(255,0,0,0.1);
+    padding:12px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    cursor:pointer;
+    position:relative;
+    transition:all 0.4s cubic-bezier(0.4,0,0.2,1);
+    box-shadow:0 4px 20px rgba(0,0,0,0.3);
+    min-height:220px;
+  }
+  .game-card:hover{ transform:translateY(-6px) scale(1.02); border-color:var(--accent); }
+
+  .game-card img{
+    width:100%;
+    height:140px;
+    border-radius:10px;
+    object-fit:cover;
+    display:block;
+    background:#111;
+  }
+
+  .game-card h3{ margin:0; font-size:18px; color:var(--accent-light); }
+  .game-card .meta{ font-size:13px; color:rgba(255,255,255,0.6); margin:0; }
+
   .app-card{
     background:linear-gradient(135deg,rgba(20,0,0,0.6),rgba(40,0,0,0.3));
     border-radius:16px;
@@ -328,6 +391,7 @@
     .logo{display:none}
     .nav{flex-direction:row}
     .apps-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}
+    .games-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}
     .home-buttons{grid-template-columns:1fr}
   }
 

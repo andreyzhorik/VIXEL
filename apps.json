@@ -1,25 +1,11 @@
 {
   "apps": [
     {
-      "id": "app_001",
-      "name": "ChatGPT",
-      "icon": "https://example.com/icons/chatgpt.png",
-      "url": "https://chat.openai.com/",
-      "description": "Smart AI chat assistant."
-    },
-    {
-      "id": "app_002",
-      "name": "Canva",
-      "icon": "https://example.com/icons/canva.png",
-      "url": "https://www.canva.com/",
-      "description": "Design logos, thumbnails, posters, and more."
-    },
-    {
-      "id": "app_003",
-      "name": "Pixlr",
-      "icon": "https://example.com/icons/pixlr.png",
-      "url": "https://pixlr.com/",
-      "description": "Online photo editor."
+      "id": "app_webdefender",
+      "name": "WebDefender",
+      "icon": "https://i.postimg.cc/TYxn8kR3/Screenshot-(6).png",
+      "url": "https://andreyzhorik.github.io/web-defender/",
+      "description": "WebDefender - site & content guard."
     }
   ]
 }

@@ -1,5 +1,13 @@
 {
   "games": [
+    {
+      "label": "KART BROS",
+      "url": "https://kart.crispyclean.org/",
+      "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzpRqlNTKFBT3AN1UwmBooqdbPCocrt-Fu2A&s",
+      "categories": [
+        "racing"
+      ]
+     },
      {
       "label": "gravity sim",
       "url": "https://www.testtubegames.com/gravity.html",

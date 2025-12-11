@@ -4,890 +4,1185 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>VIXEL Hub</title>
-<link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<meta name="description" content="Your ultimate hub for games, apps, AI tools, chat, and more. Choose a section to get started." />
+<link rel="icon" href="https://raw.githubusercontent.com/andreyzhorik/VIXEL/main/logonobg.png" type="image/png" />
+<link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <style>
-  :root{
-    --bg1:#0a0a0a; 
-    --bg2:#3D0000; 
-    --panel:#150000; 
-    --accent:#FF0000; 
-    --accent2:#950101; 
-    --accent-light:#FF3333;
-    --glass: rgba(26,0,0,0.35);
-    --muted: rgba(255,255,255,0.7);
+  :root {
+    --bg1: #0a0a0a;
+    --bg2: #3D0000;
+    --panel: #150000;
+    --accent: #FF0000;
+    --accent2: #950101;
+    --accent-light: #FF3333;
+    --glass: rgba(26, 0, 0, 0.35);
+    --muted: rgba(255, 255, 255, 0.7);
   }
-  *{box-sizing:border-box;margin:0;padding:0}
-  html,body{height:100%;font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased;color:#fff;background:linear-gradient(135deg,var(--bg1),var(--bg2));overflow:hidden}
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  html, body {
+    height: 100%;
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    color: #fff;
+    background: linear-gradient(135deg, var(--bg1), var(--bg2));
+    /* allow scrolling if content overflows */
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
 
-  .app{display:flex;height:100vh;gap:20px;padding:20px}
-  
+  .app {
+    display: flex;
+    height: 100vh;
+    gap: 20px;
+    padding: 20px;
+  }
+
   /* Sidebar */
-  #sidebar{
-    width:180px;
-    background:linear-gradient(180deg,rgba(0,0,0,0.95),rgba(61,0,0,0.85));
-    padding:16px;
-    border-radius:16px;
-    border:1px solid rgba(255,0,0,0.1);
-    display:flex;
-    flex-direction:column;
-    gap:16px;
-    flex-shrink:0;
-    box-shadow:0 8px 32px rgba(0,0,0,0.4);
+  #sidebar {
+    width: 180px;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.95), rgba(61, 0, 0, 0.85));
+    padding: 16px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    flex-shrink: 0;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   }
-  
-  .logo{
-    font-family:'Audiowide',sans-serif;
-    color:var(--accent);
-    font-size:20px;
-    text-align:center;
-    padding:8px 0;
-    text-shadow:0 0 20px rgba(255,0,0,0.3);
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:12px;
+
+  .logo {
+    font-family: 'Audiowide', sans-serif;
+    color: var(--accent);
+    font-size: 20px;
+    text-align: center;
+    padding: 8px 0;
+    text-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
   }
-  
-  .logo-icon{
-    width:100px;
-    height:100px;
-    border-radius:20px;
-    background:linear-gradient(135deg,#0a0000,#1a0000);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    border:2px solid rgba(255,0,0,0.2);
-    box-shadow:0 0 40px rgba(255,0,0,0.15), inset 0 0 20px rgba(255,0,0,0.05);
-    transition:all 0.3s ease;
+
+  .logo-icon {
+    width: 100px;
+    height: 100px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #0a0000, #1a0000);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid rgba(255, 0, 0, 0.2);
+    box-shadow: 0 0 40px rgba(255, 0, 0, 0.15), inset 0 0 20px rgba(255, 0, 0, 0.05);
+    transition: all 0.3s ease;
   }
-  
-  .logo-icon:hover{
-    transform:scale(1.05);
-    box-shadow:0 0 50px rgba(255,0,0,0.25), inset 0 0 30px rgba(255,0,0,0.1);
+
+  .logo-icon:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 50px rgba(255, 0, 0, 0.25), inset 0 0 30px rgba(255, 0, 0, 0.1);
   }
-  
-  .logo-icon img{
-    width:85%;
-    height:85%;
-    object-fit:contain;
-    display:block;
-    filter:drop-shadow(0 4px 12px rgba(255,0,0,0.3));
+
+  .logo-icon img {
+    width: 85%;
+    height: 85%;
+    object-fit: contain;
+    display: block;
+    filter: drop-shadow(0 4px 12px rgba(255, 0, 0, 0.3));
   }
-  
-  .nav{display:flex;flex-direction:column;gap:8px;margin-top:4px}
-  
-  .nav button{
-    background:rgba(0,0,0,0.3);
-    border:1px solid rgba(255,255,255,0.05);
-    padding:12px;
-    border-radius:12px;
-    color:#fff;
-    cursor:pointer;
-    text-align:left;
-    display:flex;
-    gap:10px;
-    align-items:center;
-    transition:all 0.3s cubic-bezier(0.4,0,0.2,1);
-    font-size:14px;
-    font-weight:500;
+
+  .nav {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 4px;
   }
-  
-  .nav button:hover{
-    background:rgba(255,0,0,0.1);
-    border-color:rgba(255,0,0,0.3);
-    transform:translateX(4px);
+
+  .nav button {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 12px;
+    border-radius: 12px;
+    color: #fff;
+    cursor: pointer;
+    text-align: left;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 14px;
+    font-weight: 500;
   }
-  
-  .nav button.active{
-    background:linear-gradient(135deg,var(--accent2),var(--accent));
-    border-color:transparent;
-    box-shadow:0 8px 24px rgba(255,0,0,0.3), 0 0 40px rgba(255,0,0,0.15);
+
+  .nav button:hover {
+    background: rgba(255, 0, 0, 0.1);
+    border-color: rgba(255, 0, 0, 0.3);
+    transform: translateX(4px);
+  }
+
+  .nav button.active {
+    background: linear-gradient(135deg, var(--accent2), var(--accent));
+    border-color: transparent;
+    box-shadow: 0 8px 24px rgba(255, 0, 0, 0.3), 0 0 40px rgba(255, 0, 0, 0.15);
   }
 
   /* Main */
-  #main{flex:1;display:flex;flex-direction:column;gap:20px;min-width:0}
-  
-  .topbar{
-    display:flex;
-    align-items:center;
-    gap:16px;
-    padding:16px 20px;
-    border-radius:14px;
-    background:linear-gradient(135deg,rgba(0,0,0,0.6),rgba(61,0,0,0.3));
-    border:1px solid rgba(255,0,0,0.1);
-    box-shadow:0 4px 24px rgba(0,0,0,0.3);
-    backdrop-filter:blur(10px);
+  #main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-width: 0;
   }
-  
-  .title{
-    font-family:'Audiowide',sans-serif;
-    font-size:24px;
-    background:linear-gradient(135deg,var(--accent),var(--accent-light));
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-    background-clip:text;
-    margin-right:auto;
-    text-shadow:0 0 30px rgba(255,0,0,0.3);
+
+  .topbar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 20px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.6), rgba(61, 0, 0, 0.3));
+    border: 1px solid rgba(255, 0, 0, 0.1);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
   }
-  
-  input.search{
-    padding:12px 16px;
-    border-radius:12px;
-    border:1px solid rgba(255,255,255,0.1);
-    background:rgba(0,0,0,0.5);
-    color:#fff;
-    min-width:280px;
-    font-size:14px;
-    transition:all 0.3s ease;
+
+  .title {
+    font-family: 'Audiowide', sans-serif;
+    font-size: 24px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-light));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-right: auto;
+    text-shadow: 0 0 30px rgba(255, 0, 0, 0.3);
   }
-  
-  input.search:focus{
-    outline:none;
-    border-color:var(--accent);
-    box-shadow:0 0 0 3px rgba(255,0,0,0.1), 0 4px 12px rgba(255,0,0,0.2);
-    background:rgba(0,0,0,0.7);
+
+  input.search {
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    min-width: 280px;
+    font-size: 14px;
+    transition: all 0.3s ease;
   }
-  
-  input.search::placeholder{color:rgba(255,255,255,0.4)}
+
+  input.search:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.1), 0 4px 12px rgba(255, 0, 0, 0.2);
+    background: rgba(0, 0, 0, 0.7);
+  }
+
+  input.search::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+  }
 
   /* Content panel */
-  .panel{
-    flex:1;
-    padding:20px;
-    border-radius:14px;
-    background:rgba(0,0,0,0.4);
-    border:1px solid rgba(255,0,0,0.1);
-    overflow:hidden;
-    display:flex;
-    flex-direction:column;
-    min-height:0;
-    box-shadow:inset 0 0 60px rgba(0,0,0,0.3);
+  .panel {
+    flex: 1;
+    padding: 20px;
+    border-radius: 14px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 0, 0, 0.1);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.3);
   }
-  
-  .panel-inner{display:flex;flex-direction:column;gap:16px;min-height:0;height:100%}
+
+  .panel-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-height: 0;
+    height: 100%;
+  }
 
   /* Pages */
-  .page{display:none}
-  .page.active{display:flex}
+  .page {
+    display: none;
+  }
+  .page.active {
+    display: flex;
+  }
 
   /* Home page */
-  #page-home{
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    gap:32px;
-    padding:40px;
+  #page-home {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+    padding: 40px;
   }
-  
-  .home-header{
-    text-align:center;
+
+  .home-header {
+    text-align: center;
   }
-  
-  .home-header h1{
-    font-family:'Audiowide',sans-serif;
-    font-size:48px;
-    background:linear-gradient(135deg,var(--accent),var(--accent-light));
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-    background-clip:text;
-    margin-bottom:16px;
-    text-shadow:0 0 40px rgba(255,0,0,0.3);
+
+  .home-header h1 {
+    font-family: 'Audiowide', sans-serif;
+    font-size: 48px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-light));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 16px;
+    text-shadow: 0 0 40px rgba(255, 0, 0, 0.3);
   }
-  
-  .home-header p{
-    font-size:18px;
-    color:var(--muted);
-    max-width:600px;
-    margin:0 auto;
+
+  .home-header p {
+    font-size: 18px;
+    color: var(--muted);
+    max-width: 600px;
+    margin: 0 auto;
   }
-  
-  .home-buttons{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-    gap:20px;
-    max-width:800px;
-    width:100%;
+
+  .home-buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    max-width: 800px;
+    width: 100%;
   }
-  
-  .home-btn{
-    padding:24px;
-    border-radius:16px;
-    border:1px solid rgba(255,0,0,0.2);
-    background:linear-gradient(135deg,rgba(20,0,0,0.6),rgba(40,0,0,0.3));
-    color:#fff;
-    cursor:pointer;
-    text-align:center;
-    transition:all 0.4s cubic-bezier(0.4,0,0.2,1);
-    display:flex;
-    flex-direction:column;
-    gap:12px;
-    align-items:center;
-    box-shadow:0 4px 20px rgba(0,0,0,0.3);
+
+  .home-btn {
+    padding: 24px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 0, 0, 0.2);
+    background: linear-gradient(135deg, rgba(20, 0, 0, 0.6), rgba(40, 0, 0, 0.3));
+    color: #fff;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
   }
-  
-  .home-btn:hover{
-    transform:translateY(-6px) scale(1.02);
-    border-color:var(--accent);
-    background:linear-gradient(135deg,rgba(149,1,1,0.5),rgba(255,0,0,0.3));
-    box-shadow:0 12px 40px rgba(255,0,0,0.3), 0 0 60px rgba(255,0,0,0.2);
+
+  .home-btn:hover {
+    transform: translateY(-6px) scale(1.02);
+    border-color: var(--accent);
+    background: linear-gradient(135deg, rgba(149, 1, 1, 0.5), rgba(255, 0, 0, 0.3));
+    box-shadow: 0 12px 40px rgba(255, 0, 0, 0.3), 0 0 60px rgba(255, 0, 0, 0.2);
   }
-  
-  .home-btn-icon{
-    font-size:40px;
+
+  .home-btn-icon {
+    font-size: 40px;
   }
-  
-  .home-btn-text{
-    font-size:18px;
-    font-weight:600;
+
+  .home-btn-text {
+    font-size: 18px;
+    font-weight: 600;
   }
 
   /* Filters & games/apps grid */
-  .filters{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
-  .chip{
-    display:inline-block;
-    padding:8px 16px;
-    border-radius:10px;
-    border:1px solid rgba(255,255,255,0.1);
-    background:rgba(0,0,0,0.3);
-    color:#fff;
-    cursor:pointer;
-    font-size:13px;
-    font-weight:500;
-    transition:all 0.3s ease;
+  .filters {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 12px;
   }
-  .chip:hover{
-    background:rgba(255,0,0,0.1);
-    border-color:rgba(255,0,0,0.3);
+  .chip {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.3);
+    color: #fff;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    user-select: none;
   }
-  .chip.active{
-    background:linear-gradient(135deg,var(--accent2),var(--accent));
-    border-color:transparent;
-    box-shadow:0 4px 16px rgba(255,0,0,0.3);
+  .chip:hover {
+    background: rgba(255, 0, 0, 0.1);
+    border-color: rgba(255, 0, 0, 0.3);
   }
-
-  .games-wrap{flex:1;display:flex;min-height:0}
-  .games-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
-    gap:24px;
-    padding:12px;
-    overflow:auto;
-    width:100%;
-  }
-  
-  .games-grid::-webkit-scrollbar{width:8px}
-  .games-grid::-webkit-scrollbar-track{background:rgba(0,0,0,0.2);border-radius:4px}
-  .games-grid::-webkit-scrollbar-thumb{background:rgba(255,0,0,0.3);border-radius:4px}
-  .games-grid::-webkit-scrollbar-thumb:hover{background:rgba(255,0,0,0.5)}
-
-  .apps-wrap{flex:1;display:flex;min-height:0}
-  .apps-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
-    gap:24px;
-    padding:12px;
-    overflow:auto;
-    width:100%;
-  }
-  
-  .apps-grid::-webkit-scrollbar{width:8px}
-  .apps-grid::-webkit-scrollbar-track{background:rgba(0,0,0,0.2);border-radius:4px}
-  .apps-grid::-webkit-scrollbar-thumb{background:rgba(255,0,0,0.3);border-radius:4px}
-  .apps-grid::-webkit-scrollbar-thumb:hover{background:rgba(255,0,0,0.5)}
-  
-  .game-card{
-    background:linear-gradient(135deg,rgba(20,0,0,0.6),rgba(40,0,0,0.3));
-    border-radius:16px;
-    border:1px solid rgba(255,0,0,0.1);
-    padding:12px;
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-    cursor:pointer;
-    position:relative;
-    transition:all 0.4s cubic-bezier(0.4,0,0.2,1);
-    box-shadow:0 4px 20px rgba(0,0,0,0.3);
-    min-height:220px;
-  }
-  .game-card:hover{ transform:translateY(-6px) scale(1.02); border-color:var(--accent); }
-
-  .game-card img{
-    width:100%;
-    height:140px;
-    border-radius:10px;
-    object-fit:cover;
-    display:block;
-    background:#111;
+  .chip.active {
+    background: linear-gradient(135deg, var(--accent2), var(--accent));
+    border-color: transparent;
+    box-shadow: 0 4px 16px rgba(255, 0, 0, 0.3);
   }
 
-  .game-card h3{ margin:0; font-size:18px; color:var(--accent-light); }
-  .game-card .meta{ font-size:13px; color:rgba(255,255,255,0.6); margin:0; }
-
-  .app-card{
-    background:linear-gradient(135deg,rgba(20,0,0,0.6),rgba(40,0,0,0.3));
-    border-radius:16px;
-    border:1px solid rgba(255,0,0,0.1);
-    padding:12px;
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-    cursor:pointer;
-    position:relative;
-    transition:all 0.4s cubic-bezier(0.4,0,0.2,1);
-    box-shadow:0 4px 20px rgba(0,0,0,0.3);
-    min-height:220px;
+  .games-wrap {
+    flex: 1;
+    display: flex;
+    min-height: 0;
   }
-  .app-card:hover{ transform:translateY(-6px) scale(1.02); border-color:var(--accent); }
-
-  .app-card .icon{
-    width:100%;
-    height:140px;
-    border-radius:10px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    overflow:hidden;
-    background:#111;
+  .games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 24px;
+    padding: 12px;
+    overflow: auto;
+    width: 100%;
   }
-  .app-card .icon img{ max-width:100%; max-height:100%; object-fit:contain; display:block; }
 
-  .app-card h3{ margin:0; font-size:18px; color:var(--accent-light); }
-  .app-card p{ font-size:13px; color:rgba(255,255,255,0.8); margin:0; flex:1; }
-
-  .fav{
-    position:absolute;
-    right:12px;
-    top:12px;
-    width:38px;
-    height:38px;
-    border-radius:10px;
-    background:rgba(0,0,0,0.6);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    border:1px solid rgba(255,255,255,0.1);
-    cursor:pointer;
-    transition:all 0.3s ease;
-    backdrop-filter:blur(8px);
+  .games-grid::-webkit-scrollbar {
+    width: 8px;
   }
-  .fav:hover{ transform:scale(1.08); }
-  .fav.active{ background:linear-gradient(135deg,var(--accent),var(--accent2)); box-shadow:0 4px 16px rgba(255,0,0,0.4); }
+  .games-grid::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+  }
+  .games-grid::-webkit-scrollbar-thumb {
+    background: rgba(255, 0, 0, 0.3);
+    border-radius: 4px;
+  }
+  .games-grid::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 0, 0, 0.5);
+  }
+
+  .apps-wrap {
+    flex: 1;
+    display: flex;
+    min-height: 0;
+  }
+  .apps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 24px;
+    padding: 12px;
+    overflow: auto;
+    width: 100%;
+  }
+
+  .apps-grid::-webkit-scrollbar {
+    width: 8px;
+  }
+  .apps-grid::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+  }
+  .apps-grid::-webkit-scrollbar-thumb {
+    background: rgba(255, 0, 0, 0.3);
+    border-radius: 4px;
+  }
+  .apps-grid::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 0, 0, 0.5);
+  }
+
+  .game-card {
+    background: linear-gradient(135deg, rgba(20, 0, 0, 0.6), rgba(40, 0, 0, 0.3));
+    border-radius: 16px;
+    border: 1px solid rgba(255, 0, 0, 0.1);
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    min-height: 220px;
+  }
+  .game-card:hover {
+    transform: translateY(-6px) scale(1.02);
+    border-color: var(--accent);
+  }
+
+  .game-card img {
+    width: 100%;
+    height: 140px;
+    border-radius: 10px;
+    object-fit: cover;
+    display: block;
+    background: #111;
+  }
+
+  .game-card h3 {
+    margin: 0;
+    font-size: 18px;
+    color: var(--accent-light);
+  }
+  .game-card .meta {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.6);
+    margin: 0;
+  }
+
+  .app-card {
+    background: linear-gradient(135deg, rgba(20, 0, 0, 0.6), rgba(40, 0, 0, 0.3));
+    border-radius: 16px;
+    border: 1px solid rgba(255, 0, 0, 0.1);
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    min-height: 220px;
+  }
+  .app-card:hover {
+    transform: translateY(-6px) scale(1.02);
+    border-color: var(--accent);
+  }
+
+  .app-card .icon {
+    width: 100%;
+    height: 140px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: #111;
+  }
+  .app-card .icon img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  .app-card h3 {
+    margin: 0;
+    font-size: 18px;
+    color: var(--accent-light);
+  }
+  .app-card p {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0;
+    flex: 1;
+  }
+
+  .fav {
+    position: absolute;
+    right: 12px;
+    top: 12px;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(8px);
+    user-select: none;
+  }
+  .fav:hover {
+    transform: scale(1.08);
+  }
+  .fav.active {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    box-shadow: 0 4px 16px rgba(255, 0, 0, 0.4);
+  }
 
   /* Embed */
-  .embed-area{display:none;flex-direction:column;gap:12px;min-height:0;height:100%;width:100%}
-  .embed-area.active{display:flex}
-  .embed-controls{ display:flex; gap:12px; align-items:center; }
-  .back-button{ padding:10px 16px; border-radius:10px; border:1px solid rgba(255,255,255,0.1); background:rgba(0,0,0,0.5); color:#fff; cursor:pointer; font-weight:600; transition:all 0.3s ease; }
-  .back-button:hover{ background:rgba(255,0,0,0.2); border-color:var(--accent); }
-
-  .embed-frame{ flex:1; border-radius:12px; overflow:hidden; border:2px solid rgba(255,0,0,0.2); box-shadow:0 8px 32px rgba(0,0,0,0.4); min-height:0; }
-  .embed-frame iframe{ width:100%; height:100%; border:0; background:#000; display:block; }
-
-  .empty{ padding:60px 30px; text-align:center; color:rgba(255,255,255,0.5); font-size:16px; }
-
-  @media (max-width:900px){
-    .app{flex-direction:column;padding:12px;gap:12px}
-    #sidebar{width:100%;flex-direction:row;overflow:auto;padding:12px;gap:8px}
-    .logo{display:none}
-    .nav{flex-direction:row}
-    .apps-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}
-    .games-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}
-    .home-buttons{grid-template-columns:1fr}
+  .embed-area {
+    display: none;
+    flex-direction: column;
+    gap: 12px;
+    min-height: 0;
+    height: 100%;
+    width: 100%;
+  }
+  .embed-area.active {
+    display: flex;
+  }
+  .embed-controls {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  .back-button {
+    padding: 10px 16px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    user-select: none;
+  }
+  .back-button:hover {
+    background: rgba(255, 0, 0, 0.2);
+    border-color: var(--accent);
   }
 
-  /* --- UI FIX PACK --- */
+  .embed-frame {
+    flex: 1;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 2px solid rgba(255, 0, 0, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    min-height: 0;
+  }
+  .embed-frame iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    background: #000;
+    display: block;
+  }
 
-body {
-  margin: 0;
-  padding: 0;
-  font-family: Arial, sans-serif;
-  background: #000;
-  color: white;
-}
+  .empty {
+    padding: 60px 30px;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 16px;
+  }
 
-/* Tabs layout */
-.tab-container {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin: 15px 0;
-}
-
-.tab-btn {
-  padding: 10px 18px;
-  background: #3D0000;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: 0.2s;
-  color: white;
-  font-weight: 600;
-}
-
-.tab-btn.active {
-  background: #950101;
-}
-
-/* Content area */
-#games, #apps {
-  display: none;
-}
-
-#games.active, #apps.active {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 15px;
-  padding: 20px;
-}
-
-/* Card fix */
-.card {
-  background: #150000;
-  padding: 15px;
-  border-radius: 10px;
-  text-align: center;
-  transition: 0.2s;
-}
-
-.card:hover {
-  background: #5A0000;
-  transform: scale(1.02);
-}
-
-.card img {
-  width: 70px;
-  height: 70px;
-  object-fit: contain;
-  border-radius: 10px;
-}
-
-.card h3 {
-  margin-top: 10px;
-  font-size: 18px;
-}
-
+  @media (max-width: 900px) {
+    .app {
+      flex-direction: column;
+      padding: 12px;
+      gap: 12px;
+    }
+    #sidebar {
+      width: 100%;
+      flex-direction: row;
+      overflow: auto;
+      padding: 12px;
+      gap: 8px;
+    }
+    .logo {
+      display: none;
+    }
+    .nav {
+      flex-direction: row;
+    }
+    .apps-grid,
+    .games-grid {
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    }
+    .home-buttons {
+      grid-template-columns: 1fr;
+    }
+  }
 </style>
 </head>
 <body>
   <div class="app">
-    <aside id="sidebar">
+    <aside id="sidebar" role="navigation" aria-label="Main navigation">
       <div class="logo">
         <div class="logo-icon"><img src="https://raw.githubusercontent.com/andreyzhorik/VIXEL/main/logonobg.png" alt="VIXEL logo"></div>
         <div>VIXEL</div>
       </div>
 
       <nav class="nav">
-        <button id="nav-home" class="active" onclick="showTab('home', this)">🏠 Home</button>
-        <button id="nav-games" onclick="showTab('games', this)">🎮 Games</button>
-        <button id="nav-apps" onclick="showTab('apps', this)">📱 Apps</button>
-        <button id="nav-ai" onclick="showTab('ai', this)">🤖 AI</button>
-        <button id="nav-chat" onclick="showTab('chat', this)">💬 Chat</button>
-        <button id="nav-proxy" onclick="showTab('proxy', this)">🕶️ Pøx-y</button>
-        <button id="nav-site" onclick="openSite()">🌐 Site</button>
+        <button id="nav-home" class="active" type="button" aria-label="Home" aria-current="page">🏠 Home</button>
+        <button id="nav-games" type="button" aria-label="Games">🎮 Games</button>
+        <button id="nav-apps" type="button" aria-label="Apps">📱 Apps</button>
+        <button id="nav-ai" type="button" aria-label="AI Tools">🤖 AI</button>
+        <button id="nav-chat" type="button" aria-label="Chat">💬 Chat</button>
+        <button id="nav-proxy" type="button" aria-label="Proxy">🕶️ Pøx-y</button>
+        <button id="nav-site" type="button" aria-label="Open Site">🌐 Site</button>
       </nav>
     </aside>
 
-    <main id="main">
+    <main id="main" role="main">
       <div class="topbar">
         <div class="title">VIXEL HUB</div>
-        <input id="globalSearch" class="search" placeholder="Search (games/apps)..." oninput="onGlobalSearch()" />
+        <input id="globalSearch" class="search" placeholder="Search (games/apps)..." aria-label="Global search games and apps" />
       </div>
 
       <div class="panel">
         <div class="panel-inner" id="panelInner">
           <!-- HOME -->
-          <div id="page-home" class="page active">
+          <section id="page-home" class="page active" tabindex="0" aria-label="Home">
             <div class="home-header">
               <h1>Welcome to VIXEL</h1>
               <p>Your ultimate hub for games, apps, AI tools, chat, and more. Choose a section to get started.</p>
             </div>
             <div class="home-buttons">
-              <div class="home-btn" onclick="showTab('games', document.getElementById('nav-games'))">
+              <button class="home-btn" type="button" aria-label="Go to Games section">
                 <div class="home-btn-icon">🎮</div>
                 <div class="home-btn-text">Games</div>
-              </div>
-              <div class="home-btn" onclick="showTab('apps', document.getElementById('nav-apps'))">
+              </button>
+              <button class="home-btn" type="button" aria-label="Go to Apps section">
                 <div class="home-btn-icon">📱</div>
                 <div class="home-btn-text">Apps</div>
-              </div>
-              <div class="home-btn" onclick="showTab('ai', document.getElementById('nav-ai'))">
+              </button>
+              <button class="home-btn" type="button" aria-label="Go to AI tools">
                 <div class="home-btn-icon">🤖</div>
                 <div class="home-btn-text">AI</div>
-              </div>
-              <div class="home-btn" onclick="showTab('chat', document.getElementById('nav-chat'))">
+              </button>
+              <button class="home-btn" type="button" aria-label="Go to Chat">
                 <div class="home-btn-icon">💬</div>
                 <div class="home-btn-text">Chat</div>
-              </div>
-              <div class="home-btn" onclick="showTab('proxy', document.getElementById('nav-proxy'))">
+              </button>
+              <button class="home-btn" type="button" aria-label="Go to Proxy">
                 <div class="home-btn-icon">🕶️</div>
                 <div class="home-btn-text">Pøx-y</div>
-              </div>
+              </button>
             </div>
-          </div>
+          </section>
 
-          <!-- GAMES (kept as-is, lazy load) -->
-          <div id="page-games" class="page" style="flex-direction:column;min-height:0;height:100%">
-            <input id="searchGames" class="search" placeholder="Search games..." oninput="onSearchGames()" style="margin-bottom:12px" />
-            <div class="filters" id="filtersRow"></div>
+          <!-- GAMES -->
+          <section id="page-games" class="page" style="flex-direction: column; min-height: 0; height: 100%" tabindex="0" aria-label="Games">
+            <input id="searchGames" class="search" placeholder="Search games..." aria-label="Search games" style="margin-bottom: 12px" />
+            <div class="filters" id="filtersRow" role="list" aria-label="Game categories and favorites filter"></div>
             <div class="games-wrap">
-              <div id="gamesGrid" class="games-grid"></div>
-              <div id="embedAreaGames" class="embed-area">
+              <div id="gamesGrid" class="games-grid" role="list"></div>
+              <div id="embedAreaGames" class="embed-area" aria-live="polite">
                 <div class="embed-controls">
-                  <button class="back-button" onclick="closeEmbedGames()">← Back</button>
-                  <div id="embedTitleGames" style="font-weight:700;font-size:18px"></div>
+                  <button class="back-button" type="button" aria-label="Back to games list">← Back</button>
+                  <div id="embedTitleGames" style="font-weight: 700; font-size: 18px"></div>
                 </div>
                 <div class="embed-frame">
-                  <iframe id="embedFrameGames" sandbox="allow-scripts allow-forms allow-same-origin allow-popups"></iframe>
+                  <iframe id="embedFrameGames" sandbox="allow-scripts allow-forms allow-same-origin" title="Game embed frame"></iframe>
                 </div>
               </div>
             </div>
-          </div>
+          </section>
 
-          <!-- APPS (new tab) -->
-          <div id="page-apps" class="page" style="flex-direction:column;min-height:0;height:100%">
-            <input id="searchApps" class="search" placeholder="Search apps..." oninput="onSearchApps()" style="margin-bottom:12px" />
+          <!-- APPS -->
+          <section id="page-apps" class="page" style="flex-direction: column; min-height: 0; height: 100%" tabindex="0" aria-label="Apps">
+            <input id="searchApps" class="search" placeholder="Search apps..." aria-label="Search apps" style="margin-bottom: 12px" />
             <div class="apps-wrap">
-              <div id="appsGrid" class="apps-grid"></div>
-
-              <div id="embedAreaApps" class="embed-area">
+              <div id="appsGrid" class="apps-grid" role="list"></div>
+              <div id="embedAreaApps" class="embed-area" aria-live="polite">
                 <div class="embed-controls">
-                  <button class="back-button" onclick="closeEmbedApps()">← Back</button>
-                  <div id="embedTitleApps" style="font-weight:700;font-size:18px"></div>
+                  <button class="back-button" type="button" aria-label="Back to apps list">← Back</button>
+                  <div id="embedTitleApps" style="font-weight: 700; font-size: 18px"></div>
                 </div>
                 <div class="embed-frame">
-                  <iframe id="embedFrameApps" sandbox="allow-scripts allow-forms allow-same-origin allow-popups"></iframe>
+                  <iframe id="embedFrameApps" sandbox="allow-scripts allow-forms allow-same-origin" title="App embed frame"></iframe>
                 </div>
               </div>
             </div>
-          </div>
+          </section>
 
           <!-- AI -->
-          <div id="page-ai" class="page" style="height:100%">
-            <div class="embed-frame" style="height:100%">
-              <iframe src="https://andreyzhorik.github.io/vixel-ai/" sandbox="allow-scripts allow-forms allow-same-origin allow-popups"></iframe>
+          <section id="page-ai" class="page" style="height: 100%" tabindex="0" aria-label="AI Tools">
+            <div class="embed-frame" style="height: 100%">
+              <iframe src="https://andreyzhorik.github.io/vixel-ai/" sandbox="allow-scripts allow-forms allow-same-origin" title="AI tools iframe"></iframe>
             </div>
-          </div>
+          </section>
 
           <!-- CHAT -->
-          <div id="page-chat" class="page" style="height:100%">
-            <div class="embed-frame" style="height:100%">
-              <iframe src="https://andreyzhorik.github.io/vixel-chat/" sandbox="allow-scripts allow-forms allow-same-origin allow-popups"></iframe>
+          <section id="page-chat" class="page" style="height: 100%" tabindex="0" aria-label="Chat">
+            <div class="embed-frame" style="height: 100%">
+              <iframe src="https://andreyzhorik.github.io/vixel-chat/" sandbox="allow-scripts allow-forms allow-same-origin" title="Chat iframe"></iframe>
             </div>
-          </div>
+          </section>
 
           <!-- PROXY -->
-          <div id="page-proxy" class="page" style="height:100%">
-            <div class="embed-frame" style="height:100%">
-              <iframe src="https://andreyzhorik.github.io/GRIP/" sandbox="allow-scripts allow-forms allow-same-origin allow-popups"></iframe>
+          <section id="page-proxy" class="page" style="height: 100%" tabindex="0" aria-label="Proxy">
+            <div class="embed-frame" style="height: 100%">
+              <iframe src="https://andreyzhorik.github.io/GRIP/" sandbox="allow-scripts allow-forms allow-same-origin" title="Proxy iframe"></iframe>
             </div>
-          </div>
+          </section>
         </div>
       </div>
     </main>
   </div>
 
 <script>
-/* ---------------- CONFIG ---------------- */
-const GAMES_RAW_JSON = 'https://raw.githubusercontent.com/andreyzhorik/VIXEL/main/games.json';
-const APPS_RAW_JSON = 'https://raw.githubusercontent.com/andreyzhorik/VIXEL/refs/heads/main/apps.json';
-const FALLBACK_IMG = 'https://petezahgames.com/storage/images/main/default.jpg';
-const FALLBACK_APPS = [
-  {
-    "id": "app_webdefender",
-    "name": "WebDefender",
-    "icon": "https://i.postimg.cc/TYxn8kR3/Screenshot-(6).png",
-    "url": "https://andreyzhorik.github.io/web-defender/",
-    "description": "WebDefender - site & content guard."
-  }
-];
-/* -------------- shared state ------------- */
-let gamesAll = [];
-let gamesVisible = [];
-let gamesCategories = new Set();
-let gamesFavorites = loadLocalSet('vixel_games_favs');
-
-let appsAll = [];
-let appsVisible = [];
-let appsFavorites = loadLocalSet('vixel_apps_favs');
-
-/* --------------- helpers ----------------- */
-function loadLocalSet(key){
-  try{
-    const raw = localStorage.getItem(key);
-    if(!raw) return new Set();
-    const arr = JSON.parse(raw);
-    return new Set(Array.isArray(arr) ? arr : []);
-  }catch(e){ return new Set(); }
-}
-function saveLocalSet(key, set){
-  localStorage.setItem(key, JSON.stringify(Array.from(set)));
-}
-function capitalize(s){ return s && s.length ? s[0].toUpperCase()+s.slice(1) : ''; }
-function fixUrl(u){
-  if(!u) return '';
-  if(u.startsWith('http://') || u.startsWith('https://')) return u;
-  if(u.startsWith('/')) return 'https://petezahgames.com' + u;
-  return u;
-}
-
-/* -------------- NAV --------------- */
-function clearActiveNav(){
-  document.querySelectorAll('#sidebar .nav button').forEach(b => b.classList.remove('active'));
-}
-function showTab(tab, btnEl){
-  clearActiveNav();
-  if(btnEl) btnEl.classList.add('active');
-
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  const page = document.getElementById('page-' + tab);
-  if(page){
-    page.classList.add('active');
-    if(tab === 'games') ensureGamesLoaded();
-    if(tab === 'apps') ensureAppsLoaded();
-  }
-  window.scrollTo(0,0);
-}
-function openSite(){ window.open('https://sites.google.com/view/vixelhub', '_blank', 'noopener'); }
-
-/* -------------- FETCH JSON ------------- */
-async function fetchJson(url){
-  const res = await fetch(url);
-  if(!res.ok) throw new Error('fetch failed ' + res.status);
-  return res.json();
-}
-
-/* ---------------- GAMES (existing logic, minimal) --------------- */
-function normalizeGamesArray(data){
-  if(!data) return [];
-  if(Array.isArray(data)) return data;
-  if(typeof data === 'object'){
-    if(Array.isArray(data.games)) return data.games;
-    if(Array.isArray(data.items)) return data.items;
-    return Object.values(data);
-  }
-  return [];
-}
-function normalizeGameItem(g){
-  return {
-    id: (g.id || g.label || g.title || g.name || '').toString(),
-    label: g.label || g.title || g.name || 'Untitled',
-    url: fixUrl(g.url || g.embed || g.link || ''),
-    imageUrl: fixUrl(g.image || g.thumbnail || g.thumb || g.imageUrl || ''),
-    categories: (g.categories || g.tags || []).map(x=> (x||'').toLowerCase().trim()),
-    raw: g
-  };
-}
-async function loadAndNormalizeGames(){
-  let data = null;
-  try{ data = await fetchJson(GAMES_RAW_JSON); }catch(e){ console.warn('games.json failed', e); data = null; }
-  const arr = normalizeGamesArray(data).map(normalizeGameItem);
-  gamesAll = arr;
-  gamesVisible = gamesAll.slice();
-  gamesCategories = new Set();
-  gamesAll.forEach(g => (g.categories||[]).forEach(c=>gamesCategories.add(c)));
-  buildGameFilters();
-  renderGamesGrid();
-}
-function ensureGamesLoaded(){ if(gamesAll.length === 0) loadAndNormalizeGames(); }
-function buildGameFilters(){
-  const row = document.getElementById('filtersRow');
-  row.innerHTML = '';
-  const favChip = document.createElement('div');
-  favChip.className = 'chip';
-  favChip.style.display = 'inline-block';
-  favChip.textContent = '⭐ Favorites';
-  favChip.onclick = () => { favChip.classList.toggle('active'); applyFiltersGames(); };
-  row.appendChild(favChip);
-  Array.from(gamesCategories).slice(0,80).forEach(cat => {
-    const btn = document.createElement('div');
-    btn.className = 'chip';
-    btn.style.display = 'inline-block';
-    btn.textContent = capitalize(cat);
-    btn.onclick = () => { btn.classList.toggle('active'); applyFiltersGames(); };
-    row.appendChild(btn);
-  });
-}
-function applyFiltersGames(){
-  const q = document.getElementById('searchGames').value.trim().toLowerCase();
-  const activeCats = Array.from(document.querySelectorAll('#filtersRow .chip.active')).map(n=>n.textContent.toLowerCase());
-  const onlyFav = document.querySelector('#filtersRow .chip')?.classList.contains('active') && document.querySelector('#filtersRow .chip').textContent === '⭐ Favorites';
-  gamesVisible = gamesAll.filter(g=>{
-    if(activeCats.length){
-      // if first chip is favorites, handle separately below
-      const cats = g.categories || [];
-      if(!activeCats.some(c=>cats.includes(c))) return false;
+  /* ---------------- CONFIG ---------------- */
+  const GAMES_RAW_JSON = 'https://raw.githubusercontent.com/andreyzhorik/VIXEL/main/games.json';
+  const APPS_RAW_JSON = 'https://raw.githubusercontent.com/andreyzhorik/VIXEL/main/apps.json';
+  const FALLBACK_IMG = 'https://petezahgames.com/storage/images/main/default.jpg';
+  const FALLBACK_APPS = [
+    {
+      id: 'app_webdefender',
+      name: 'WebDefender',
+      icon: 'https://i.postimg.cc/TYxn8kR3/Screenshot-(6).png',
+      url: 'https://andreyzhorik.github.io/web-defender/',
+      description: 'WebDefender - site & content guard.'
     }
-    if(q && !g.label.toLowerCase().includes(q)) return false;
-    // if favorites chip active, show only favorites:
-    const favChip = Array.from(document.querySelectorAll('#filtersRow .chip')).find(c=>c.textContent === '⭐ Favorites');
-    if(favChip && favChip.classList.contains('active') && !gamesFavorites.has(g.id)) return false;
-    return true;
-  });
-  renderGamesGrid();
-}
-function onSearchGames(){ applyFiltersGames(); }
-function renderGamesGrid(){
-  const container = document.getElementById('gamesGrid');
-  container.innerHTML = '';
-  if(!gamesVisible || gamesVisible.length === 0){ container.innerHTML = '<div class="empty">No games found.</div>'; return; }
-  gamesVisible.forEach(g=>{
-    const card = document.createElement('div');
-    card.className = 'game-card';
-    const img = document.createElement('img');
-    img.src = g.imageUrl || FALLBACK_IMG;
-    img.onerror = ()=> img.src = FALLBACK_IMG;
-    card.appendChild(img);
+  ];
 
-    const favBtn = document.createElement('div');
-    favBtn.className = 'fav' + (gamesFavorites.has(g.id) ? ' active' : '');
-    favBtn.title = 'Toggle favorite';
-    favBtn.innerHTML = gamesFavorites.has(g.id) ? '❤' : '♡';
-    favBtn.onclick = (e)=>{ e.stopPropagation(); if(gamesFavorites.has(g.id)) gamesFavorites.delete(g.id); else gamesFavorites.add(g.id); saveLocalSet('vixel_games_favs', gamesFavorites); renderGamesGrid(); };
-    card.appendChild(favBtn);
+  /* -------------- shared state ------------- */
+  let gamesAll = [];
+  let gamesVisible = [];
+  let gamesCategories = new Set();
+  let gamesFavorites = loadLocalSet('vixel_games_favs');
 
-    const title = document.createElement('h3'); title.textContent = g.label; card.appendChild(title);
-    const meta = document.createElement('div'); meta.className='meta'; meta.textContent = (g.categories && g.categories.length) ? g.categories.slice(0,2).map(capitalize).join(', ') : ''; card.appendChild(meta);
-    card.onclick = ()=> openEmbedGame(g);
-    container.appendChild(card);
-  });
-}
-function openEmbedGame(g){
-  document.getElementById('embedAreaGames').classList.add('active');
-  document.getElementById('gamesGrid').style.display = 'none';
-  document.getElementById('embedTitleGames').textContent = g.label;
-  document.getElementById('embedFrameGames').src = g.url || '';
-}
-function closeEmbedGames(){
-  document.getElementById('embedAreaGames').classList.remove('active');
-  document.getElementById('gamesGrid').style.display = '';
-  document.getElementById('embedFrameGames').src = '';
-}
+  let appsAll = [];
+  let appsVisible = [];
+  let appsFavorites = loadLocalSet('vixel_apps_favs');
 
-/* ---------------- APPS (new) --------------- */
-function normalizeAppsArray(data){
-  if(!data) return [];
-  if(Array.isArray(data)) return data;
-  if(typeof data === 'object'){
-    if(Array.isArray(data.apps)) return data.apps;
-    return Object.values(data);
+  /* --------------- helpers ----------------- */
+  function loadLocalSet(key) {
+    try {
+      const raw = localStorage.getItem(key);
+      if (!raw) return new Set();
+      const arr = JSON.parse(raw);
+      if (!Array.isArray(arr)) {
+        console.warn(`LocalStorage key ${key} does not contain an array, resetting.`);
+        return new Set();
+      }
+      return new Set(arr);
+    } catch (e) {
+      console.warn(`Failed to load localStorage key ${key}:`, e);
+      return new Set();
+    }
   }
-  return [];
-}
-function normalizeAppItem(a){
-  return {
-    id: (a.id || a.name || '').toString(),
-    name: a.name || a.title || 'Untitled App',
-    icon: fixUrl(a.icon || a.image || a.thumbnail || ''),
-    url: fixUrl(a.url || a.link || ''),
-    description: a.description || '',
-    raw: a
-  };
-}
-async function loadAndNormalizeApps(){
-  let data = null;
-  try{ data = await fetchJson(APPS_RAW_JSON); }catch(e){ console.warn('apps.json failed', e); data = null; }
-  const arr = normalizeAppsArray(data);
-  if(arr.length === 0){
-    // fallback to built-in apps
-    appsAll = FALLBACK_APPS.map(normalizeAppItem);
-  } else {
-    appsAll = arr.map(normalizeAppItem);
+
+  function saveLocalSet(key, set) {
+    try {
+      localStorage.setItem(key, JSON.stringify(Array.from(set)));
+    } catch (e) {
+      console.warn(`Failed to save localStorage key ${key}:`, e);
+    }
   }
-  appsVisible = appsAll.slice();
-  renderAppsGrid();
-}
-function ensureAppsLoaded(){ if(appsAll.length === 0) loadAndNormalizeApps(); }
 
-function applyFiltersApps(){
-  const q = document.getElementById('searchApps').value.trim().toLowerCase();
-  appsVisible = appsAll.filter(a => {
-    if(q && !(a.name.toLowerCase().includes(q) || (a.description || '').toLowerCase().includes(q))) return false;
-    return true;
-  });
-  renderAppsGrid();
-}
-function onSearchApps(){ applyFiltersApps(); }
-
-function renderAppsGrid(){
-  const container = document.getElementById('appsGrid');
-  container.innerHTML = '';
-  if(!appsVisible || appsVisible.length === 0){ container.innerHTML = '<div class="empty">No apps found.</div>'; return; }
-  appsVisible.forEach(a=>{
-    const card = document.createElement('div');
-    card.className = 'app-card';
-
-    const favBtn = document.createElement('div');
-    favBtn.className = 'fav' + (appsFavorites.has(a.id) ? ' active' : '');
-    favBtn.title = 'Toggle favorite';
-    favBtn.innerHTML = appsFavorites.has(a.id) ? '❤' : '♡';
-    favBtn.onclick = (e)=>{ e.stopPropagation(); if(appsFavorites.has(a.id)) appsFavorites.delete(a.id); else appsFavorites.add(a.id); saveLocalSet('vixel_apps_favs', appsFavorites); renderAppsGrid(); };
-    card.appendChild(favBtn);
-
-    const iconWrap = document.createElement('div');
-    iconWrap.className = 'icon';
-    const img = document.createElement('img');
-    img.src = a.icon || FALLBACK_IMG;
-    img.onerror = ()=> img.src = FALLBACK_IMG;
-    iconWrap.appendChild(img);
-    card.appendChild(iconWrap);
-
-    const title = document.createElement('h3'); title.textContent = a.name; card.appendChild(title);
-    const desc = document.createElement('p'); desc.textContent = a.description || ''; card.appendChild(desc);
-
-    card.onclick = ()=> openEmbedApp(a);
-    container.appendChild(card);
-  });
-}
-
-function openEmbedApp(a){
-  document.getElementById('embedAreaApps').classList.add('active');
-  document.getElementById('appsGrid').style.display = 'none';
-  document.getElementById('embedTitleApps').textContent = a.name;
-  document.getElementById('embedFrameApps').src = a.url || '';
-}
-
-function closeEmbedApps(){
-  document.getElementById('embedAreaApps').classList.remove('active');
-  document.getElementById('appsGrid').style.display = '';
-  document.getElementById('embedFrameApps').src = '';
-}
-
-/* -------------- GLOBAL SEARCH (topbar) ------------- */
-function onGlobalSearch(){
-  const q = document.getElementById('globalSearch').value.trim().toLowerCase();
-  // propagate to active page search
-  if(document.getElementById('page-games').classList.contains('active')){
-    document.getElementById('searchGames').value = q;
-    onSearchGames();
-  } else if(document.getElementById('page-apps').classList.contains('active')){
-    document.getElementById('searchApps').value = q;
-    onSearchApps();
-  } else {
-    // set both but don't switch tabs
-    if(document.getElementById('searchGames')) document.getElementById('searchGames').value = q;
-    if(document.getElementById('searchApps')) document.getElementById('searchApps').value = q;
+  function capitalize(s) {
+    return s && s.length ? s[0].toUpperCase() + s.slice(1) : '';
   }
-}
 
-/* --------------- BOOT --------------- */
-document.addEventListener('DOMContentLoaded', async ()=>{
-  showTab('home', document.getElementById('nav-home'));
-  // preload games & apps quietly
-  ensureGamesLoaded();
-  ensureAppsLoaded();
-});
-</script>
-<script>
-function openTab(tabName) {
-  document.getElementById("games").classList.remove("active");
-  document.getElementById("apps").classList.remove("active");
+  function fixUrl(u) {
+    if (!u) return '';
+    if (u.startsWith('http://') || u.startsWith('https://')) return u;
+    if (u.startsWith('/')) return 'https://petezahgames.com' + u;
+    return u;
+  }
 
-  document.getElementById(tabName).classList.add("active");
+  /* -------------- NAV --------------- */
+  const navButtons = document.querySelectorAll('#sidebar .nav button');
+  navButtons.forEach(btn => {
+    btn.addEventListener('click', e => {
+      const btnEl = e.currentTarget;
+      const tab = btnEl.id.replace('nav-', '');
+      if (tab === 'site') {
+        openSite();
+      } else {
+        showTab(tab, btnEl);
+      }
+    });
+  });
 
-  // highlight tabs
-  document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
-  document.getElementById("btn-" + tabName).classList.add("active");
-}
+  function clearActiveNav() {
+    navButtons.forEach(b => {
+      b.classList.remove('active');
+      b.removeAttribute('aria-current');
+    });
+  }
+
+  function showTab(tab, btnEl) {
+    clearActiveNav();
+    if (btnEl) {
+      btnEl.classList.add('active');
+      btnEl.setAttribute('aria-current', 'page');
+    }
+
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    const page = document.getElementById('page-' + tab);
+    if (page) {
+      page.classList.add('active');
+      if (tab === 'games') ensureGamesLoaded();
+      if (tab === 'apps') ensureAppsLoaded();
+    }
+    window.scrollTo(0, 0);
+    // Clear global search input on tab change for better UX
+    document.getElementById('globalSearch').value = '';
+    onGlobalSearch();
+  }
+
+  function openSite() {
+    window.open('https://sites.google.com/view/vixelhub', '_blank', 'noopener,noreferrer');
+  }
+
+  /* -------------- FETCH JSON ------------- */
+  async function fetchJson(url) {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('fetch failed ' + res.status);
+    return res.json();
+  }
+
+  /* ---------------- GAMES --------------- */
+  function normalizeGamesArray(data) {
+    if (!data) return [];
+    if (Array.isArray(data)) return data;
+    if (typeof data === 'object') {
+      if (Array.isArray(data.games)) return data.games;
+      if (Array.isArray(data.items)) return data.items;
+      return Object.values(data);
+    }
+    return [];
+  }
+
+  function normalizeGameItem(g) {
+    return {
+      id: (g.id || g.label || g.title || g.name || '').toString(),
+      label: g.label || g.title || g.name || 'Untitled',
+      url: fixUrl(g.url || g.embed || g.link || ''),
+      imageUrl: fixUrl(g.image || g.thumbnail || g.thumb || g.imageUrl || ''),
+      categories: (g.categories || g.tags || []).map(x => (x || '').toLowerCase().trim()),
+      raw: g
+    };
+  }
+
+  async function loadAndNormalizeGames() {
+    let data = null;
+    try {
+      data = await fetchJson(GAMES_RAW_JSON);
+    } catch (e) {
+      console.warn('games.json failed', e);
+      data = null;
+    }
+    const arr = normalizeGamesArray(data).map(normalizeGameItem);
+    gamesAll = arr;
+    gamesVisible = gamesAll.slice();
+    gamesCategories = new Set();
+    gamesAll.forEach(g => (g.categories || []).forEach(c => gamesCategories.add(c)));
+    buildGameFilters();
+    renderGamesGrid();
+  }
+
+  function ensureGamesLoaded() {
+    if (gamesAll.length === 0) loadAndNormalizeGames();
+  }
+
+  function buildGameFilters() {
+    const row = document.getElementById('filtersRow');
+    row.innerHTML = '';
+    // Favorites chip
+    const favChip = document.createElement('div');
+    favChip.className = 'chip';
+    favChip.style.display = 'inline-block';
+    favChip.textContent = '⭐ Favorites';
+    favChip.setAttribute('role', 'button');
+    favChip.setAttribute('tabindex', '0');
+    favChip.setAttribute('aria-pressed', 'false');
+    favChip.addEventListener('click', () => {
+      favChip.classList.toggle('active');
+      favChip.setAttribute('aria-pressed', favChip.classList.contains('active'));
+      applyFiltersGames();
+    });
+    favChip.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        favChip.click();
+      }
+    });
+    row.appendChild(favChip);
+
+    Array.from(gamesCategories).slice(0, 80).forEach(cat => {
+      const btn = document.createElement('div');
+      btn.className = 'chip';
+      btn.style.display = 'inline-block';
+      btn.textContent = capitalize(cat);
+      btn.setAttribute('role', 'button');
+      btn.setAttribute('tabindex', '0');
+      btn.setAttribute('aria-pressed', 'false');
+      btn.addEventListener('click', () => {
+        btn.classList.toggle('active');
+        btn.setAttribute('aria-pressed', btn.classList.contains('active'));
+        applyFiltersGames();
+      });
+      btn.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          btn.click();
+        }
+      });
+      row.appendChild(btn);
+    });
+  }
+
+  function applyFiltersGames() {
+    const q = document.getElementById('searchGames').value.trim().toLowerCase();
+    const chipEls = Array.from(document.querySelectorAll('#filtersRow .chip'));
+    const favChip = chipEls.find(c => c.textContent === '⭐ Favorites');
+    const isFavActive = favChip && favChip.classList.contains('active');
+
+    // Get active category chips excluding favorites chip
+    const activeCats = chipEls.filter(c => c !== favChip && c.classList.contains('active'))
+      .map(c => c.textContent.toLowerCase());
+
+    gamesVisible = gamesAll.filter(g => {
+      if (isFavActive && !gamesFavorites.has(g.id)) return false;
+      if (activeCats.length) {
+        const cats = g.categories || [];
+        if (!activeCats.some(c => cats.includes(c))) return false;
+      }
+      if (q && !g.label.toLowerCase().includes(q)) return false;
+      return true;
+    });
+
+    renderGamesGrid();
+  }
+
+  function onSearchGames() {
+    applyFiltersGames();
+  }
+
+  function renderGamesGrid() {
+    const container = document.getElementById('gamesGrid');
+    container.innerHTML = '';
+    if (!gamesVisible || gamesVisible.length === 0) {
+      container.innerHTML = '<div class="empty">No games found.</div>';
+      return;
+    }
+    const fragment = document.createDocumentFragment();
+    gamesVisible.forEach(g => {
+      const card = document.createElement('div');
+      card.className = 'game-card';
+      card.setAttribute('role', 'listitem');
+      card.setAttribute('tabindex', '0');
+      card.setAttribute('aria-label', g.label);
+
+      const img = document.createElement('img');
+      img.src = g.imageUrl || FALLBACK_IMG;
+      img.alt = g.label;
+      img.onerror = () => img.src = FALLBACK_IMG;
+      card.appendChild(img);
+
+      const favBtn = document.createElement('div');
+      favBtn.className = 'fav' + (gamesFavorites.has(g.id) ? ' active' : '');
+      favBtn.title = 'Toggle favorite';
+      favBtn.setAttribute('role', 'button');
+      favBtn.setAttribute('tabindex', '0');
+      favBtn.setAttribute('aria-pressed', gamesFavorites.has(g.id));
+      favBtn.innerHTML = gamesFavorites.has(g.id) ? '❤' : '♡';
+      favBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        if (gamesFavorites.has(g.id)) gamesFavorites.delete(g.id);
+        else gamesFavorites.add(g.id);
+        saveLocalSet('vixel_games_favs', gamesFavorites);
+        favBtn.classList.toggle('active');
+        favBtn.setAttribute('aria-pressed', favBtn.classList.contains('active'));
+        favBtn.innerHTML = favBtn.classList.contains('active') ? '❤' : '♡';
+        // Do not re-render entire grid for performance
+      });
+      favBtn.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          favBtn.click();
+        }
+      });
+      card.appendChild(favBtn);
+
+      const title = document.createElement('h3');
+      title.textContent = g.label;
+      card.appendChild(title);
+
+      const meta = document.createElement('div');
+      meta.className = 'meta';
+      meta.textContent = (g.categories && g.categories.length) ? g.categories.slice(0, 2).map(capitalize).join(', ') : '';
+      card.appendChild(meta);
+
+      card.addEventListener('click', () => openEmbedGame(g));
+      card.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          openEmbedGame(g);
+        }
+      });
+
+      fragment.appendChild(card);
+    });
+    container.appendChild(fragment);
+  }
+
+  function openEmbedGame(g) {
+    document.getElementById('embedAreaGames').classList.add('active');
+    document.getElementById('gamesGrid').style.display = 'none';
+    document.getElementById('embedTitleGames').textContent = g.label;
+    document.getElementById('embedFrameGames').src = g.url || '';
+  }
+
+  function closeEmbedGames() {
+    document.getElementById('embedAreaGames').classList.remove('active');
+    document.getElementById('gamesGrid').style.display = '';
+    document.getElementById('embedFrameGames').src = '';
+  }
+
+  document.querySelector('#embedAreaGames .back-button').addEventListener('click', closeEmbedGames);
+
+  /* ---------------- APPS --------------- */
+  function normalizeAppsArray(data) {
+    if (!data) return [];
+    if (Array.isArray(data)) return data;
+    if (typeof data === 'object') {
+      if (Array.isArray(data.apps)) return data.apps;
+      return Object.values(data);
+    }
+    return [];
+  }
+
+  function normalizeAppItem(a) {
+    return {
+      id: (a.id || a.name || '').toString(),
+      name: a.name || a.title || 'Untitled App',
+      icon: fixUrl(a.icon || a.image || a.thumbnail || ''),
+      url: fixUrl(a.url || a.link || ''),
+      description: a.description || '',
+      raw: a
+    };
+  }
+
+  async function loadAndNormalizeApps() {
+    let data = null;
+    try {
+      data = await fetchJson(APPS_RAW_JSON);
+    } catch (e) {
+      console.warn('apps.json failed', e);
+      data = null;
+    }
+    const arr = normalizeAppsArray(data);
+    if (arr.length === 0) {
+      // fallback to built-in apps
+      appsAll = FALLBACK_APPS.map(normalizeAppItem);
+    } else {
+      appsAll = arr.map(normalizeAppItem);
+    }
+    appsVisible = appsAll.slice();
+    renderAppsGrid();
+  }
+
+  function ensureAppsLoaded() {
+    if (appsAll.length === 0) loadAndNormalizeApps();
+  }
+
+  function applyFiltersApps() {
+    const q = document.getElementById('searchApps').value.trim().toLowerCase();
+    appsVisible = appsAll.filter(a => {
+      if (q && !(a.name.toLowerCase().includes(q) || (a.description || '').toLowerCase().includes(q))) return false;
+      return true;
+    });
+    renderAppsGrid();
+  }
+
+  function onSearchApps() {
+    applyFiltersApps();
+  }
+
+  function renderAppsGrid() {
+    const container = document.getElementById('appsGrid');
+    container.innerHTML = '';
+    if (!appsVisible || appsVisible.length === 0) {
+      container.innerHTML = '<div class="empty">No apps found.</div>';
+      return;
+    }
+    const fragment = document.createDocumentFragment();
+    appsVisible.forEach(a => {
+      const card = document.createElement('div');
+      card.className = 'app-card';
+      card.setAttribute('role', 'listitem');
+      card.setAttribute('tabindex', '0');
+      card.setAttribute('aria-label', a.name);
+
+      const favBtn = document.createElement('div');
+      favBtn.className = 'fav' + (appsFavorites.has(a.id) ? ' active' : '');
+      favBtn.title = 'Toggle favorite';
+      favBtn.setAttribute('role', 'button');
+      favBtn.setAttribute('tabindex', '0');
+      favBtn.setAttribute('aria-pressed', appsFavorites.has(a.id));
+      favBtn.innerHTML = appsFavorites.has(a.id) ? '❤' : '♡';
+      favBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        if (appsFavorites.has(a.id)) appsFavorites.delete(a.id);
+        else appsFavorites.add(a.id);
+        saveLocalSet('vixel_apps_favs', appsFavorites);
+        favBtn.classList.toggle('active');
+        favBtn.setAttribute('aria-pressed', favBtn.classList.contains('active'));
+        favBtn.innerHTML = favBtn.classList.contains('active') ? '❤' : '♡';
+        // Do not re-render entire grid for performance
+      });
+      favBtn.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          favBtn.click();
+        }
+      });
+      card.appendChild(favBtn);
+
+      const iconWrap = document.createElement('div');
+      iconWrap.className = 'icon';
+      const img = document.createElement('img');
+      img.src = a.icon || FALLBACK_IMG;
+      img.alt = a.name;
+      img.onerror = () => img.src = FALLBACK_IMG;
+      iconWrap.appendChild(img);
+      card.appendChild(iconWrap);
+
+      const title = document.createElement('h3');
+      title.textContent = a.name;
+      card.appendChild(title);
+
+      const desc = document.createElement('p');
+      desc.textContent = a.description || '';
+      card.appendChild(desc);
+
+      card.addEventListener('click', () => openEmbedApp(a));
+      card.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          openEmbedApp(a);
+        }
+      });
+
+      fragment.appendChild(card);
+    });
+    container.appendChild(fragment);
+  }
+
+  function openEmbedApp(a) {
+    document.getElementById('embedAreaApps').classList.add('active');
+    document.getElementById('appsGrid').style.display = 'none';
+    document.getElementById('embedTitleApps').textContent = a.name;
+    document.getElementById('embedFrameApps').src = a.url || '';
+  }
+
+  function closeEmbedApps() {
+    document.getElementById('embedAreaApps').classList.remove('active');
+    document.getElementById('appsGrid').style.display = '';
+    document.getElementById('embedFrameApps').src = '';
+  }
+
+  document.querySelector('#embedAreaApps .back-button').addEventListener('click', closeEmbedApps);
+
+  /* -------------- GLOBAL SEARCH (topbar) ------------- */
+  document.getElementById('globalSearch').addEventListener('input', onGlobalSearch);
+
+  function onGlobalSearch() {
+    const q = document.getElementById('globalSearch').value.trim().toLowerCase();
+    if (document.getElementById('page-games').classList.contains('active')) {
+      document.getElementById('searchGames').value = q;
+      onSearchGames();
+    } else if (document.getElementById('page-apps').classList.contains('active')) {
+      document.getElementById('searchApps').value = q;
+      onSearchApps();
+    } else {
+      if (document.getElementById('searchGames')) document.getElementById('searchGames').value = q;
+      if (document.getElementById('searchApps')) document.getElementById('searchApps').value = q;
+    }
+  }
+
+  /* --------------- BOOT --------------- */
+  document.addEventListener('DOMContentLoaded', () => {
+    showTab('home', document.getElementById('nav-home'));
+    ensureGamesLoaded();
+    ensureAppsLoaded();
+
+    // Home buttons event listeners (avoid inline handlers)
+    document.querySelectorAll('.home-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const text = btn.querySelector('.home-btn-text').textContent.toLowerCase();
+        if (text === 'games') showTab('games', document.getElementById('nav-games'));
+        else if (text === 'apps') showTab('apps', document.getElementById('nav-apps'));
+        else if (text === 'ai') showTab('ai', document.getElementById('nav-ai'));
+        else if (text === 'chat') showTab('chat', document.getElementById('nav-chat'));
+        else if (text === 'pøx-y') showTab('proxy', document.getElementById('nav-proxy'));
+      });
+    });
+
+    // Attach event handlers for game and app search inputs
+    document.getElementById('searchGames').addEventListener('input', onSearchGames);
+    document.getElementById('searchApps').addEventListener('input', onSearchApps);
+  });
 </script>
 </body>
 </html>

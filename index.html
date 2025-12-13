@@ -29,7 +29,6 @@
     -webkit-font-smoothing: antialiased;
     color: #fff;
     background: linear-gradient(135deg, var(--bg1), var(--bg2));
-    /* allow scrolling if content overflows */
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
   }
@@ -547,6 +546,31 @@
     font-size: 16px;
   }
 
+  /* Clean portal button styling for portal page */
+  .portal-wrap {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* ensures the button is centered horizontally */
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  .open-portal {
+    background: #5865F2;
+    color: white;
+    border: none;
+    padding: 15px 32px;
+    border-radius: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  .open-portal:hover {
+    background: #4752C4;
+    transform: scale(1.05);
+  }
+
   @media (max-width: 900px) {
     .app {
       flex-direction: column;
@@ -590,7 +614,7 @@
         <button id="nav-apps" type="button" aria-label="Apps">📱 Apps</button>
         <button id="nav-ai" type="button" aria-label="AI Tools">🤖 AI</button>
         <button id="nav-chat" type="button" aria-label="Chat">💬 Chat</button>
-        <button id="nav-proxy" type="button" aria-label="Proxy">🕶️ Pøx-y</button>
+        <button id="nav-portal" type="button" aria-label="Portal">🕶️ Portal</button>
         <button id="nav-site" type="button" aria-label="Open Site">🌐 Site</button>
       </nav>
     </aside>
@@ -626,9 +650,9 @@
                 <div class="home-btn-icon">💬</div>
                 <div class="home-btn-text">Chat</div>
               </button>
-              <button class="home-btn" type="button" aria-label="Go to Proxy">
+              <button class="home-btn" type="button" aria-label="Go to Portal">
                 <div class="home-btn-icon">🕶️</div>
-                <div class="home-btn-text">Pøx-y</div>
+                <div class="home-btn-text">Portal</div>
               </button>
             </div>
           </section>
@@ -682,10 +706,10 @@
             </div>
           </section>
 
-          <!-- PROXY -->
-          <section id="page-proxy" class="page" style="height: 100%" tabindex="0" aria-label="Proxy">
-            <div class="embed-frame" style="height: 100%">
-              <iframe src="https://andreyzhorik.github.io/GRIP/" sandbox="allow-scripts allow-forms allow-same-origin" title="Proxy iframe"></iframe>
+          <!-- PORTAL -->
+          <section id="page-portal" class="page" style="height: 100%" tabindex="0" aria-label="Portal">
+            <div class="portal-wrap" aria-live="polite">
+              <button id="openPortal" class="open-portal" type="button" aria-label="Open Portal secure">PORTAL secure🔒</button>
             </div>
           </section>
         </div>
@@ -783,7 +807,6 @@
     }
 
     // Close any open embeds so iframes stop running in the background
-    // (prevents games/apps from continuing to run when user navigates)
     try { closeEmbedGames(); } catch (e) {}
     try { closeEmbedApps(); } catch (e) {}
 
@@ -906,7 +929,6 @@
     const favChip = chipEls.find(c => c.textContent === '⭐ Favorites');
     const isFavActive = favChip && favChip.classList.contains('active');
 
-    // Get active category chips excluding favorites chip
     const activeCats = chipEls.filter(c => c !== favChip && c.classList.contains('active'))
       .map(c => c.textContent.toLowerCase());
 
@@ -963,7 +985,6 @@
         favBtn.classList.toggle('active');
         favBtn.setAttribute('aria-pressed', favBtn.classList.contains('active'));
         favBtn.innerHTML = favBtn.classList.contains('active') ? '❤' : '♡';
-        // Do not re-render entire grid for performance
       });
       favBtn.addEventListener('keydown', e => {
         if (e.key === 'Enter' || e.key === ' ') {
@@ -996,7 +1017,6 @@
   }
 
   function openEmbedGame(g) {
-    // Hide list and controller elements to give iframe more space
     const searchEl = document.getElementById('searchGames');
     const filtersEl = document.getElementById('filtersRow');
     if (searchEl) searchEl.style.display = 'none';
@@ -1006,10 +1026,8 @@
     document.getElementById('gamesGrid').style.display = 'none';
     document.getElementById('embedTitleGames').textContent = g.label;
 
-    // Set iframe src (use about:blank fallback)
     const iframe = document.getElementById('embedFrameGames');
     iframe.src = g.url || 'about:blank';
-    // try to focus iframe for accessibility
     try { iframe.focus(); } catch (e) {}
   }
 
@@ -1022,7 +1040,6 @@
     document.getElementById('embedAreaGames').classList.remove('active');
     document.getElementById('gamesGrid').style.display = '';
     const iframe = document.getElementById('embedFrameGames');
-    // set to about:blank to stop background activity in most browsers
     if (iframe) iframe.src = 'about:blank';
   }
 
@@ -1112,7 +1129,6 @@
   }
 
   function openEmbedApp(a) {
-    // Hide app page controls to give iframe more space
     const searchEl = document.getElementById('searchApps');
     if (searchEl) searchEl.style.display = 'none';
 
@@ -1135,8 +1151,42 @@
     if (iframe) iframe.src = 'about:blank';
   }
 
+  /* ---------------- PORTAL --------------- */
+  // Clean function moved into main script (opens PORTAL in a new tab and writes an iframe inside)
+  function openPortalInNewTab() {
+    const newTab = window.open('about:blank', '_blank');
+    if (newTab) {
+      const html = `
+        <!doctype html>
+        <html>
+          <head>
+            <meta charset="utf-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            <title>portal</title>
+            <style>
+              html, body { margin:0; padding:0; height:100%; background:#0b0b11; }
+              iframe { width:100%; height:100%; border:0; display:block; }
+            </style>
+          </head>
+          <body>
+            <iframe src="https://andreyzhorik.github.io/portal/"></iframe>
+          </body>
+        </html>
+      `;
+      try {
+        newTab.document.open();
+        newTab.document.write(html);
+        newTab.document.close();
+      } catch (e) {
+        // Some browsers block writing to a new window; fall back to opening the target directly
+        newTab.location.href = 'https://andreyzhorik.github.io/portal/';
+      }
+    } else {
+      alert('Please allow pop-ups for this site!');
+    }
+  }
+
   /* ---------------- COMMON ---------------- */
-  // wire up embed back buttons so users can close embeds (and we stop the iframes)
   function initEmbedBackButtons() {
     const gb = document.querySelectorAll('#embedAreaGames .back-button');
     gb.forEach(b => b.addEventListener('click', closeEmbedGames));
@@ -1144,7 +1194,6 @@
     ab.forEach(b => b.addEventListener('click', closeEmbedApps));
   }
 
-  // add event listeners for search inputs
   function initSearchHandlers() {
     const sg = document.getElementById('searchGames');
     if (sg) {
@@ -1153,7 +1202,6 @@
     const sa = document.getElementById('searchApps');
     if (sa) {
       sa.addEventListener('input', () => {
-        // simple app search
         const q = sa.value.trim().toLowerCase();
         appsVisible = appsAll.filter(a => a.name.toLowerCase().includes(q) || (a.description && a.description.toLowerCase().includes(q)));
         renderAppsGrid();
@@ -1161,26 +1209,30 @@
     }
   }
 
-  // init everything after DOM ready
   document.addEventListener('DOMContentLoaded', () => {
     initEmbedBackButtons();
     initSearchHandlers();
-    // don't auto-load all data until user navigates (keeps things idle)
-    // optionally load home or nothing
+
+    // hook PORTAL button (if present)
+    const openPortalBtn = document.getElementById('openPortal');
+    if (openPortalBtn) {
+      openPortalBtn.addEventListener('click', openPortalInNewTab);
+    }
+    // don't auto-load all data until user navigates
   });
 
-  // make sure when user leaves the page (or navigates to other tabs) iframes are cleared
   window.addEventListener('beforeunload', () => {
     try { closeEmbedGames(); } catch (e) {}
     try { closeEmbedApps(); } catch (e) {}
   });
 
-  // expose some functions for debugging if needed
+  // expose functions for debugging
   window._vixel = {
     closeEmbedGames,
     closeEmbedApps,
     openEmbedGame,
-    openEmbedApp
+    openEmbedApp,
+    openPortalInNewTab
   };
 </script>
 </body>

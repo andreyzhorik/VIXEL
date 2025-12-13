@@ -485,6 +485,12 @@
     box-shadow: 0 4px 16px rgba(255, 0, 0, 0.4);
   }
 
+  /* when embed is open we hide page controls for more space */
+  .embed-area.active ~ .games-grid,
+  .embed-area.active ~ .apps-grid {
+    display: none;
+  }
+
   /* Embed */
   .embed-area {
     display: none;
@@ -592,7 +598,7 @@
     <main id="main" role="main">
       <div class="topbar">
         <div class="title">VIXEL HUB</div>
-        <input id="globalSearch" class="search" placeholder="Search (games/apps)..." aria-label="Global search games and apps" />
+        <!-- top search removed as requested -->
       </div>
 
       <div class="panel">
@@ -776,6 +782,11 @@
       btnEl.setAttribute('aria-current', 'page');
     }
 
+    // Close any open embeds so iframes stop running in the background
+    // (prevents games/apps from continuing to run when user navigates)
+    try { closeEmbedGames(); } catch (e) {}
+    try { closeEmbedApps(); } catch (e) {}
+
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     const page = document.getElementById('page-' + tab);
     if (page) {
@@ -784,9 +795,6 @@
       if (tab === 'apps') ensureAppsLoaded();
     }
     window.scrollTo(0, 0);
-    // Clear global search input on tab change for better UX
-    document.getElementById('globalSearch').value = '';
-    onGlobalSearch();
   }
 
   function openSite() {
@@ -892,7 +900,8 @@
   }
 
   function applyFiltersGames() {
-    const q = document.getElementById('searchGames').value.trim().toLowerCase();
+    const searchEl = document.getElementById('searchGames');
+    const q = searchEl ? searchEl.value.trim().toLowerCase() : '';
     const chipEls = Array.from(document.querySelectorAll('#filtersRow .chip'));
     const favChip = chipEls.find(c => c.textContent === '⭐ Favorites');
     const isFavActive = favChip && favChip.classList.contains('active');
@@ -987,19 +996,35 @@
   }
 
   function openEmbedGame(g) {
+    // Hide list and controller elements to give iframe more space
+    const searchEl = document.getElementById('searchGames');
+    const filtersEl = document.getElementById('filtersRow');
+    if (searchEl) searchEl.style.display = 'none';
+    if (filtersEl) filtersEl.style.display = 'none';
+
     document.getElementById('embedAreaGames').classList.add('active');
     document.getElementById('gamesGrid').style.display = 'none';
     document.getElementById('embedTitleGames').textContent = g.label;
-    document.getElementById('embedFrameGames').src = g.url || '';
+
+    // Set iframe src (use about:blank fallback)
+    const iframe = document.getElementById('embedFrameGames');
+    iframe.src = g.url || 'about:blank';
+    // try to focus iframe for accessibility
+    try { iframe.focus(); } catch (e) {}
   }
 
   function closeEmbedGames() {
+    const searchEl = document.getElementById('searchGames');
+    const filtersEl = document.getElementById('filtersRow');
+    if (searchEl) searchEl.style.display = '';
+    if (filtersEl) filtersEl.style.display = '';
+
     document.getElementById('embedAreaGames').classList.remove('active');
     document.getElementById('gamesGrid').style.display = '';
-    document.getElementById('embedFrameGames').src = '';
+    const iframe = document.getElementById('embedFrameGames');
+    // set to about:blank to stop background activity in most browsers
+    if (iframe) iframe.src = 'about:blank';
   }
-
-  document.querySelector('#embedAreaGames .back-button').addEventListener('click', closeEmbedGames);
 
   /* ---------------- APPS --------------- */
   function normalizeAppsArray(data) {
@@ -1007,6 +1032,7 @@
     if (Array.isArray(data)) return data;
     if (typeof data === 'object') {
       if (Array.isArray(data.apps)) return data.apps;
+      if (Array.isArray(data.items)) return data.items;
       return Object.values(data);
     }
     return [];
@@ -1014,12 +1040,11 @@
 
   function normalizeAppItem(a) {
     return {
-      id: (a.id || a.name || '').toString(),
-      name: a.name || a.title || 'Untitled App',
+      id: (a.id || a.label || a.title || a.name || '').toString(),
+      name: a.name || a.title || a.label || 'Untitled',
+      url: fixUrl(a.url || a.link || a.embed || ''),
       icon: fixUrl(a.icon || a.image || a.thumbnail || ''),
-      url: fixUrl(a.url || a.link || ''),
-      description: a.description || '',
-      raw: a
+      description: a.description || ''
     };
   }
 
@@ -1031,32 +1056,14 @@
       console.warn('apps.json failed', e);
       data = null;
     }
-    const arr = normalizeAppsArray(data);
-    if (arr.length === 0) {
-      // fallback to built-in apps
-      appsAll = FALLBACK_APPS.map(normalizeAppItem);
-    } else {
-      appsAll = arr.map(normalizeAppItem);
-    }
+    const arr = normalizeAppsArray(data).map(normalizeAppItem);
+    appsAll = arr.length ? arr : FALLBACK_APPS;
     appsVisible = appsAll.slice();
     renderAppsGrid();
   }
 
   function ensureAppsLoaded() {
     if (appsAll.length === 0) loadAndNormalizeApps();
-  }
-
-  function applyFiltersApps() {
-    const q = document.getElementById('searchApps').value.trim().toLowerCase();
-    appsVisible = appsAll.filter(a => {
-      if (q && !(a.name.toLowerCase().includes(q) || (a.description || '').toLowerCase().includes(q))) return false;
-      return true;
-    });
-    renderAppsGrid();
-  }
-
-  function onSearchApps() {
-    applyFiltersApps();
   }
 
   function renderAppsGrid() {
@@ -1073,31 +1080,6 @@
       card.setAttribute('role', 'listitem');
       card.setAttribute('tabindex', '0');
       card.setAttribute('aria-label', a.name);
-
-      const favBtn = document.createElement('div');
-      favBtn.className = 'fav' + (appsFavorites.has(a.id) ? ' active' : '');
-      favBtn.title = 'Toggle favorite';
-      favBtn.setAttribute('role', 'button');
-      favBtn.setAttribute('tabindex', '0');
-      favBtn.setAttribute('aria-pressed', appsFavorites.has(a.id));
-      favBtn.innerHTML = appsFavorites.has(a.id) ? '❤' : '♡';
-      favBtn.addEventListener('click', e => {
-        e.stopPropagation();
-        if (appsFavorites.has(a.id)) appsFavorites.delete(a.id);
-        else appsFavorites.add(a.id);
-        saveLocalSet('vixel_apps_favs', appsFavorites);
-        favBtn.classList.toggle('active');
-        favBtn.setAttribute('aria-pressed', favBtn.classList.contains('active'));
-        favBtn.innerHTML = favBtn.classList.contains('active') ? '❤' : '♡';
-        // Do not re-render entire grid for performance
-      });
-      favBtn.addEventListener('keydown', e => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          favBtn.click();
-        }
-      });
-      card.appendChild(favBtn);
 
       const iconWrap = document.createElement('div');
       iconWrap.className = 'icon';
@@ -1130,59 +1112,76 @@
   }
 
   function openEmbedApp(a) {
+    // Hide app page controls to give iframe more space
+    const searchEl = document.getElementById('searchApps');
+    if (searchEl) searchEl.style.display = 'none';
+
     document.getElementById('embedAreaApps').classList.add('active');
     document.getElementById('appsGrid').style.display = 'none';
     document.getElementById('embedTitleApps').textContent = a.name;
-    document.getElementById('embedFrameApps').src = a.url || '';
+
+    const iframe = document.getElementById('embedFrameApps');
+    iframe.src = a.url || 'about:blank';
+    try { iframe.focus(); } catch (e) {}
   }
 
   function closeEmbedApps() {
+    const searchEl = document.getElementById('searchApps');
+    if (searchEl) searchEl.style.display = '';
+
     document.getElementById('embedAreaApps').classList.remove('active');
     document.getElementById('appsGrid').style.display = '';
-    document.getElementById('embedFrameApps').src = '';
+    const iframe = document.getElementById('embedFrameApps');
+    if (iframe) iframe.src = 'about:blank';
   }
 
-  document.querySelector('#embedAreaApps .back-button').addEventListener('click', closeEmbedApps);
+  /* ---------------- COMMON ---------------- */
+  // wire up embed back buttons so users can close embeds (and we stop the iframes)
+  function initEmbedBackButtons() {
+    const gb = document.querySelectorAll('#embedAreaGames .back-button');
+    gb.forEach(b => b.addEventListener('click', closeEmbedGames));
+    const ab = document.querySelectorAll('#embedAreaApps .back-button');
+    ab.forEach(b => b.addEventListener('click', closeEmbedApps));
+  }
 
-  /* -------------- GLOBAL SEARCH (topbar) ------------- */
-  document.getElementById('globalSearch').addEventListener('input', onGlobalSearch);
-
-  function onGlobalSearch() {
-    const q = document.getElementById('globalSearch').value.trim().toLowerCase();
-    if (document.getElementById('page-games').classList.contains('active')) {
-      document.getElementById('searchGames').value = q;
-      onSearchGames();
-    } else if (document.getElementById('page-apps').classList.contains('active')) {
-      document.getElementById('searchApps').value = q;
-      onSearchApps();
-    } else {
-      if (document.getElementById('searchGames')) document.getElementById('searchGames').value = q;
-      if (document.getElementById('searchApps')) document.getElementById('searchApps').value = q;
+  // add event listeners for search inputs
+  function initSearchHandlers() {
+    const sg = document.getElementById('searchGames');
+    if (sg) {
+      sg.addEventListener('input', onSearchGames);
+    }
+    const sa = document.getElementById('searchApps');
+    if (sa) {
+      sa.addEventListener('input', () => {
+        // simple app search
+        const q = sa.value.trim().toLowerCase();
+        appsVisible = appsAll.filter(a => a.name.toLowerCase().includes(q) || (a.description && a.description.toLowerCase().includes(q)));
+        renderAppsGrid();
+      });
     }
   }
 
-  /* --------------- BOOT --------------- */
+  // init everything after DOM ready
   document.addEventListener('DOMContentLoaded', () => {
-    showTab('home', document.getElementById('nav-home'));
-    ensureGamesLoaded();
-    ensureAppsLoaded();
-
-    // Home buttons event listeners (avoid inline handlers)
-    document.querySelectorAll('.home-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const text = btn.querySelector('.home-btn-text').textContent.toLowerCase();
-        if (text === 'games') showTab('games', document.getElementById('nav-games'));
-        else if (text === 'apps') showTab('apps', document.getElementById('nav-apps'));
-        else if (text === 'ai') showTab('ai', document.getElementById('nav-ai'));
-        else if (text === 'chat') showTab('chat', document.getElementById('nav-chat'));
-        else if (text === 'pøx-y') showTab('proxy', document.getElementById('nav-proxy'));
-      });
-    });
-
-    // Attach event handlers for game and app search inputs
-    document.getElementById('searchGames').addEventListener('input', onSearchGames);
-    document.getElementById('searchApps').addEventListener('input', onSearchApps);
+    initEmbedBackButtons();
+    initSearchHandlers();
+    // don't auto-load all data until user navigates (keeps things idle)
+    // optionally load home or nothing
   });
+
+  // make sure when user leaves the page (or navigates to other tabs) iframes are cleared
+  window.addEventListener('beforeunload', () => {
+    try { closeEmbedGames(); } catch (e) {}
+    try { closeEmbedApps(); } catch (e) {}
+  });
+
+  // expose some functions for debugging if needed
+  window._vixel = {
+    closeEmbedGames,
+    closeEmbedApps,
+    openEmbedGame,
+    openEmbedApp
+  };
 </script>
 </body>
 </html>
